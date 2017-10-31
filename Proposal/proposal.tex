@@ -1,6 +1,8 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
 
 \title{CMSC 5741 project proposal}
 \date{}
@@ -8,7 +10,7 @@
   \maketitle
 \textbf{Proposed Project Title:}\\
 
-"To be filled"
+\textbf{Ranking and Prediction of Amazon Fine Food based on Costumer's rating and review}
 \\
 
 \begin{center}
@@ -24,19 +26,103 @@
 \end{center}
 
 \section{Motivation:}
-\paragraph{"Motivation to be filled lmao."}
+Currently, we are all living in a social system under capitalism. Every enterprise is competing with each other with their own products, services and even user experience. With the rapid growth of the internet in recent year, user experience can be further improved via processing huge data on costumer's review and rating. The Large internet-based retailer, like Amazon, have an enormous number of products but obviously, not all of them are popular. Therefore, processing costumer's review and rating of a product is vital for improving user experience thus increasing profit.\\
 
-\section{Topics related and deliverables:}
-\paragraph{"Fill this!"}
+In order to determine the popularity of a product, an explicit way is to process costumer's review and rating. Nonetheless, the number of responses on a product would not always be sufficiently large enough for reference. In other words, we have a sparse dataset with users versus rating. With the help of matrix completion helps to extend the sparse data and return an estimated complete data matrix for further processing. In the Amazon Fine Food Reviews, there are user's scores on different products and our goal is to investigate the popularity of products. This will benefit online retailer to promote further actions to enhance user experience and yield more revenue. That is to say to shine a spotlight on popular items under "Recommended Items" to drive traffic; or to group less popular products for sale and promotions.
 
-\section{Algorithm, dataset and demonstration method:}
-\paragraph{"Fill this again!"}
+\section{Topics related, Algorithm and deliverables:}
+
+This project is related to the following topics in descending order of level of relation:
+\begin{itemize}
+\item Probabilistic Matrix Factorization for analysis product's popularity
+\item Collaborative filtering
+\item Frequent itemset on reviews based on frequently used important word
+\item MapReduce for pre-processing the data into format we want
+\end{itemize}
+
+At the end of the project, we are expected to come up with the most and least popularity set of products. The result could also be used to predict an product popularity based on rating or reviews.
+
+\section{Dataset and demonstration method:}
+The tentative dataset is the \href{https://www.kaggle.com/snap/amazon-fine-food-reviews/data}{\textbf{Amazon Fine Food Reviews}}[1] data from Standford Network Analysis Project with 568,454 food reviews from 256,059 Amazon users on 74,258 products during Oct 1999 to Oct 2012.\\
+
+The following is the basic statistics of this dataset:
+\pagebreak
+\begin{center}
+  \captionof{table}{Table of general statistic}
+  \begin{tabular}{ | l | l | l | l |}
+    \hline
+    & Score & HelpfulnessNumerator & HelpfulnessDenominator \\ \hline
+    Mean & 4.18 & 1.74 & 2.23 \\ \hline
+    Std & 1.31 & 7.64 & 8.29\\ \hline
+    Min & 1 & 0 & 0\\ \hline
+    First Quartile & 4 & 0 & 0\\ \hline
+    Median & 5 & 0 & 0\\ \hline
+    Third Quartile & 5 & 0 & 0\\ \hline
+    Max & 5 & 866 & 923\\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \captionof{table}{Table of Counting Unique}
+  \begin{tabular}{| l | l |}
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Count Unique}}\\ 
+    \hline
+    Review Id & 568454 \\ \hline
+    product Id & 74258 \\ \hline
+    User Id & 256059 \\ \hline
+    HelpfulnessNumerator & 231 \\ \hline
+    HelpfulnessDenominator Id & 234 \\ \hline
+    Rating & 5 \\ \hline
+    Time & 3168 \\ \hline
+    Summary & 295743 \\ \hline
+    Review & 393579 \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \captionof{table}{Table based on Product}
+  \begin{tabular}{| l | l |}
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Number of Review of each ProductId}}\\
+    \hline
+    Count & 74258 \\ \hline
+    Mean & 7.66 \\ \hline
+    Std & 26.45 \\ \hline
+    Min & 1 \\ \hline
+    First Quartile & 1 \\ \hline
+    Median & 2 \\ \hline
+    Second Quartile & 5 \\ \hline
+    Max & 913 \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \captionof{table}{Table based on User}
+  \begin{tabular}{| l | l |}
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Number of Review of each UserId}}\\
+    \hline
+    Count & 256059 \\ \hline
+    Mean & 2.22 \\ \hline
+    Std & 4.44 \\ \hline
+    Min & 1 \\ \hline
+    First Quartile & 1 \\ \hline
+    Median & 1 \\ \hline
+    Second Quartile & 2 \\ \hline
+    Max & 448 \\ \hline
+  \end{tabular}
+\end{center}
+
+We would first be using MapReduce for processing all the data into a matrix. Idea behind is to divide the whole table into section for different Mappers, producing pair with key(userId, productId) and value(Score, Summary, Tex, HelpfulnessNumerator, HelpfulnessDenominator) and Reducers put them into a matrix.\\
+
+Thus, we would be using matrix factorization techniques to perform Probabilistic Matrix Factorization and followed by optimization steps.
+To demonstrate our analysis result, the program would be able to suggest top 5+ popular items and some less popular items during the period when the data was recorded. Furthermore, with the result, we can do prediction on the popularity of a product based on user's review and rating.
 
 \section{Related work:}
-\paragraph{"Done typing that line again."}
-
+\href{https://www.kaggle.com/gpayen/building-a-prediction-model}{Building a prediction model by Guillaume Payen from Kaggle}[2]
 \section{Timeline of project milestone:}
-"Just an idea we can change it later!!"
+The following is the rough project timeline :
 \begin{center}
     \begin{tabular}{| l | l | l | l |}
     \hline
@@ -44,42 +130,27 @@
     1 &  Designing the semantic of the program and implementation.\\ \hline
     2 &  Implementation period.\\ \hline
     3 &  Implementation, validation and testing period.\\ \hline
-    4 &  Presentation Slide done by latex and ready for demonstration. \\ \hline
+    4 &  Presentation Slide did by latex and ready for demonstration. \\ \hline
     5 &  Finalising project. \\ \hline
     
     \end{tabular}
 \end{center}
 
 
-I kept the refernecing part from my database proposal just for me not need to remember the format ignore these.
 \begin{thebibliography}{1}
 
 \bibitem{paper2}
-	Taher H. Haveliwala,
-	{\em Topic-Sensitive PageRank:
-A Context-Sensitive Ranking Algorithm for Web Search},
-	Standford University,
-	Dec. 15 2002.
+	J. McAuley and J. Leskovec,
+	{\em From amateurs to connoisseurs:modelling the evolution of user expertise through online reviews},
+	WWW,
+	2013.
 	
-\bibitem{paper3}
-	Naresh Kumar, Prachi Dahiya, Associate Professor, B. Tech. Student,
-	{\em Weighted Similarity Page Rank : An Improvement in WPR and WSR},
-	Maharaja Surajmal Institute of Technology,
-	Aug. 2017.
-	
-\bibitem{paper1}
-	Kartik Lakhotia, Rajgopal Kannan, Viktor Prasanna,
-	{\em Accelerating PageRank using Partition-Centric Processing},
-	Ming Hsieh Department of Electrical Engineering, University of Southern California,
-	2017.
-	
-\bibitem{paper4}
-J. M. Maestre, Hideaki Ishii, E. Algaba	
-	{\em Node Aggregation for Enhancing PageRank},
-	University of Seville,
-	Tokyo Institute of Technology,
-	Sep. 22 2017
-	
+\bibitem{relatedWork}
+	Guillaume Payen,
+	\href{https://www.kaggle.com/gpayen/building-a-prediction-model}{{\em Building a prediction model}},
+	Kaggle,
+	2015.
+
 \end{thebibliography}
 
 \end{document}
