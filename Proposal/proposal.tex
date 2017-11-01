@@ -114,7 +114,7 @@ The following is the basic statistics of this dataset:
   \end{tabular}
 \end{center}
 
-We would first be using MapReduce for processing all the data into a matrix. Idea behind is to divide the whole table into section for different Mappers, producing pair with key(userId, productId) and value(Score, Summary, Tex, HelpfulnessNumerator, HelpfulnessDenominator) and Reducers put them into a matrix.\\
+We would first be using MapReduce for processing all the data into a matrix. Idea behind is to divide the whole table into section for different Mappers, producing pair with key(userId, productId) and value(Score, Summary, Text, HelpfulnessNumerator, HelpfulnessDenominator) and Reducers put them into a matrix.\\
 
 Thus, we would be using matrix factorization techniques to perform Probabilistic Matrix Factorization and followed by optimization steps.
 To demonstrate our analysis result, the program would be able to suggest top 5+ popular items and some less popular items during the period when the data was recorded. Furthermore, with the result, we can do prediction on the popularity of a product based on user's review and rating.
