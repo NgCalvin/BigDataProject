@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  jupyter:
+    image: jupyter/scipy-notebook:c8797824e8c0
+    volumes:
+      - ./notebooks:/home/jovyan/notebooks
+    command: start-notebook.sh --NotebookApp.token=''
+    ports:
+      - "8888:8888"
+

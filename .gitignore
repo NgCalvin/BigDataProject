@@ -1,4 +1,4 @@
-# Created by https://www.gitignore.io/api/osx,python
+# Created by https://www.gitignore.io/api/osx,python,jupyternotebook
 
 ### OSX ###
 *.DS_Store
@@ -130,7 +130,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# End of https://www.gitignore.io/api/osx,python
+### JupyterNotebook ###
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# End of https://www.gitignore.io/api/osx,python,jupyternotebook
 
 ### Docker ###
 docker-compose.override.yml
