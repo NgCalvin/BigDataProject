@@ -5,11 +5,31 @@ In order to determine the popularity of a product, an explicit way is to process
 
 
 \section{Problem Setting}
+k-singles on the comments in different rating. k can be changed, we will see the performance on different number of k. k is probably from 1 to 3\\
+k-combination problem\\
+So there will be 5 category and classify the comment to one of it.\\
+Using Hadoop.\\
+We will be writing a program that will filter out the stop words.\\
+Ignoring the empty comment or defalt value.\\
+
+\begin{enumerate}
+\item Work 0: Pre-process : remove stop words (python)
+\item Work 1: FIS (python)
+\item work 2: k-singles (support = ?) mapReduce (Hadoop)
+\item work 3: prediction : weight equation (
+\end{enumerate}
+
+Firstly, Put every comments into that rating category and will only left with top 100 FIS. 
+The system intake the data set we will be using mapReduce of k-singles on comment and it's count.
+Mapper will take in the data result will be <(shingle),<count,rating>,...>
+Reducer will be <(shingle),<count,rating>,...>
+When a new comment comes in we will compare its k-shingles to the result from Pre-processing result.
 
 \section{System Structure}
 In this project, we will be using python to code the system that perform pre-processing on the data set. Based on the result we can do prediction based on the comment.
 \subsection{Structure Diagram}
 In this subsection, we will be explaining the idea behind the system and the structure of the system.
+
 
 \section{Testing}
 The system will be taking 80\% of the data set to be based set and the rest as testing and improving the prediction.
