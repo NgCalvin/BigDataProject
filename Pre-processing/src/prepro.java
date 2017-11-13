@@ -13,17 +13,17 @@ public class prepro
 	public static void main(String[] args) throws FileNotFoundException, IOException
 	{
 		
-		PrintStream out = new PrintStream(new FileOutputStream("src/Result.csv"));
+		PrintStream out = new PrintStream(new FileOutputStream("Result.csv"));
 		System.setOut(out);
 
-		try(BufferedReader br = new BufferedReader(new FileReader("src/stopword.txt")))
+		try(BufferedReader br = new BufferedReader(new FileReader("stopword.txt")))
 		{
 			for(String line; (line = br.readLine())!= null;)
 			{
 				stopWords.add(line);
 			}
 		}
-		try(BufferedReader br = new BufferedReader(new FileReader("src/Reviews.csv")))
+		try(BufferedReader br = new BufferedReader(new FileReader("Reviews.csv")))
 		{
 			for(String line; (line = br.readLine())!= null;)
 			{
