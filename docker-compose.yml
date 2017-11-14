@@ -16,3 +16,12 @@ services:
     image: localhost/cmsc5751-project-env
     volumes:
       - .:/usr/src/app
+
+  preprocess:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    image: localhost/cmsc5751-project-env
+    volumes:
+      - ./scripts:/usr/src/app
+    command: python preprocess.py
