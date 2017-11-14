@@ -5,11 +5,13 @@ import sys,os
 sys.path.append(r"/Users/heinam/BigDataProject.git/Mapreduce/")
 from mapper import *
 from reducer import *
+from cleanup import *
 
-def main():
-	k_max = 5 #define maximum k-length shingle
-	top_max = 10 #define number of top frequent words
-	reducer(mapper,k_max)
+
+	
 
 if __name__ == '__main__':
-	main()
+	k_max = 5 #define maximum k-length shingle
+	top_max = 10 #define number of top frequent words
+	reduced_result = reducer(mapper,k_max)
+	cleanup(reduced_result,k_max,top_max)
