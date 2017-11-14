@@ -8,7 +8,7 @@ SCORE_MIN = 1
 SCORE_MAX = 5
 
 
-def cleanup(reduced_result, k_max, top_max, separator='\t'):
+def cleanup(reduced_result, top_max):
     #get mapped result
     data = reduced_result
 
@@ -24,13 +24,16 @@ def cleanup(reduced_result, k_max, top_max, separator='\t'):
     count = 0
     
     for line in data:
+    	#current score and k-length for this record
     	score = line[0]
     	k = line[1]
 
+    	#if it is beginning of new group i.e. different k-length with previous
     	if k != prev_k:
     		count = 0
     		print "top {} for score = {} and k-length = {}".format(top_max,score,k)
 
+    	#if already outputted top n frequent words in the same group, skip
     	if count == top_max:
     		continue
 

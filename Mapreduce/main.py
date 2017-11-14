@@ -14,4 +14,4 @@ if __name__ == '__main__':
 	k_max = 5 #define maximum k-length shingle
 	top_max = 10 #define number of top frequent words
 	reduced_result = reducer(mapper,k_max)
-	cleanup(reduced_result,k_max,top_max)
+	cleanup(reduced_result,top_max)
