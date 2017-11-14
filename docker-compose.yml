@@ -9,3 +9,10 @@ services:
     ports:
       - "8888:8888"
 
+  env:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    image: localhost/cmsc5751-project-env
+    volumes:
+      - .:/usr/src/app
