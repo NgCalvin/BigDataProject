@@ -28,8 +28,8 @@ def cleanup(reduced_result, top_max):
     	score = line[0]
     	k = line[1]
 
-    	#if it is beginning of new group i.e. different k-length with previous
-    	if k != prev_k:
+    	#if it is beginning of new group i.e. different k-length / score with previous
+    	if (k != prev_k) | (score != prev_score):
     		count = 0
     		print "top {} for score = {} and k-length = {}".format(top_max,score,k)
 
