@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class prepro 
@@ -13,30 +15,50 @@ public class prepro
 	public static void main(String[] args) throws FileNotFoundException, IOException
 	{
 		
-		PrintStream out = new PrintStream(new FileOutputStream("Result.csv"));
-		System.setOut(out);
+//		PrintStream out = new PrintStream(new FileOutputStream("src/Result.csv"));
+//		System.setOut(out);
 
-		try(BufferedReader br = new BufferedReader(new FileReader("stopword.txt")))
+		PrintWriter pw = new PrintWriter(new File("src/Result.csv"));
+		try(BufferedReader br2 = new BufferedReader(new FileReader("src/stopword.txt")))
 		{
-			for(String line; (line = br.readLine())!= null;)
+			for(String line; (line = br2.readLine())!= null;)
 			{
 				stopWords.add(line);
 			}
 		}
-		try(BufferedReader br = new BufferedReader(new FileReader("Reviews.csv")))
+		try(BufferedReader br = new BufferedReader(new FileReader("src/Reviews.csv")))
 		{
 			for(String line; (line = br.readLine())!= null;)
 			{
 				String[] temp = line.split(",");
 				String comment = "";
-				for(int i = 9 ; i < temp.length ; i++)
+				String rating = "";
+				int count = 0;
+				String summary = "";
+				for(int j = 0 ; j < temp.length ; j++)
 				{
-					comment += temp[i] + " ";
+					if(temp[j].matches("[0-9]+") && count < 4)
+					{
+						count++;
+					}
+					else
+					if(temp[j].matches("[0-9]+") && count == 4)
+					{
+						rating = temp[j-1];
+
+						summary = temp[j+1];
+						for(int i = (j+2) ; i < temp.length ; i++)
+						{
+							comment += temp[i] + " ";
+						}
+						
+						break;
+					}
 				}
-				String removeStop = removeStop(comment.replaceAll("[^a-zA-Z ]", "").toLowerCase());
-				String result = temp[6] + "," + temp[8] + "," + removeStop;		
-				System.out.println(result);
+				pw.println(rating + "," + summary + "," + removeStop(comment.replaceAll("[^a-zA-Z ]", "").toLowerCase()));
+				//System.out.println(temp[0] + "," + rating + "," + summary + "," + removeStop(comment.replaceAll("[^a-zA-Z ]", "").toLowerCase()));
 			}
+			System.out.println("Done");
 		}
 	}
 	
