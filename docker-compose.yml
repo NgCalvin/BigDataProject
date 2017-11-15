@@ -25,3 +25,12 @@ services:
     volumes:
       - ./scripts:/usr/src/app
     command: python preprocess.py
+
+  predict:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    image: localhost/cmsc5751-project-env
+    volumes:
+      - ./scripts:/usr/src/app
+    command: python predict.py
