@@ -25,7 +25,7 @@ if __name__ == '__main__':
         reduced_data = reducer(mapped_data, min_support)
         filtered_data = filter_result(reduced_data, top_max)
 
-        print("Score, Shingle Length, Frequency, Shingle")
+        print("Score,Shingle Length,Frequency,Shingle")
         for each_data in filtered_data:
             each_data_strings = [str(s) for s in each_data]
-            print(", ".join(each_data_strings))
+            print(",".join(each_data_strings))
