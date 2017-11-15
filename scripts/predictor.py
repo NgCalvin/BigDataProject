@@ -5,18 +5,23 @@ from collections import namedtuple
 ShingleScore = namedtuple('ShingleScore', ['shingle', 'score', 'frequency'])
 
 class Predictor:
-    def __init__(self):
+    def __init__(self, shingle_len_filter = None):
         self.database = {}
         self.max_shingle_length = 0
+        self.shingle_len_filter = shingle_len_filter
 
     def addShingleScore(self, shingle_score):
         shingle = shingle_score.shingle
+        shingle_len = len(shingle.split(' '))
+
+        if self.shingle_len_filter and self.shingle_len_filter != shingle_len:
+            # filter the shingle length
+            return
 
         shingle_scores = self.database.get(shingle, [])
         shingle_scores.append(shingle_score)
         self.database[shingle] = shingle_scores
 
-        shingle_len = len(shingle.split(' '))
         self.max_shingle_length = max(self.max_shingle_length, shingle_len)
 
     def predict(self, text):
@@ -46,6 +51,5 @@ class Predictor:
 
         score_sum = 0
         for shingle_len, score in score_dict.items():
-            print("Using {}-shingle, score: {}".format(shingle_len, score))
             score_sum += score
         return score_sum / len(score_dict)

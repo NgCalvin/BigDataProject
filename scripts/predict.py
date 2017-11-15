@@ -7,24 +7,37 @@ from text_preprocessor import TextPreprocessor
 from predictor import Predictor, ShingleScore
 
 if __name__ == '__main__':
-    argc = len(sys.argv)
-    if argc < 2 or argc > 4:
+    argv = sys.argv.copy()
+    argv.reverse()
+
+    argc = len(argv)
+    if argc < 2 or argc > 5:
         try:
-            script_name = sys.argv[0]
+            script_name = argv[-1]
         except IndexError:
             script_name = 'predict.py'
-        print('Usage: python {} <DataBaseFile> [Text]'.format(script_name),
+        print('Usage: python {} <DatabaseFile> [ShingleLength] [Text]'.format(script_name),
               file=sys.stderr)
         exit(1)
+    else:
+        argv.pop()
 
-    database_file = sys.argv[1]
+    database_file = argv.pop()
     if not os.path.exists(database_file):
         print("Cannot find database file \"{}\"".format(database_file),
               file=sys.stderr)
         exit(2)
-    df = pd.read_csv(database_file)
 
-    predictor = Predictor()
+    shingle_length = None
+    if len(argv) != 0:
+        shingle_length_str = argv.pop()
+        try:
+            shingle_length = int(shingle_length_str)
+        except (ValueError, TypeError):
+            argv.append(shingle_length_str)
+
+    predictor = Predictor(shingle_length)
+    df = pd.read_csv(database_file)
     for idx, r in df.iterrows():
         shingle_score = ShingleScore(shingle=r['Shingle'],
                                      score=r['Score'],
@@ -36,8 +49,8 @@ if __name__ == '__main__':
         processed_text = tp.process(text)
         return predictor.predict(processed_text)
 
-    if argc == 3:
-        text = sys.argv[2]
+    if len(argv) != 0:
+        text = argv.pop()
         score = predict(text)
         print("Score = {}".format(score))
         exit(0)
