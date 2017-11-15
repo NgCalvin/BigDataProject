@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
+import sys
+
 from itertools import groupby
 from operator import itemgetter
-import sys
 
 SCORE_MIN = 1
 SCORE_MAX = 5
 
-
-def cleanup(reduced_result, top_max):
+def filter_result(reduced_result, top_max):
     #get mapped result
     data = reduced_result
 
@@ -19,7 +19,7 @@ def cleanup(reduced_result, top_max):
     for (key, rev) in reversed(sorter):
         data = sorted(data, key = itemgetter(key), reverse=rev)
 
-    prev_score = SCORE_MIN-1
+    prev_score = SCORE_MIN - 1
     prev_k = 1-1
     count = 0
 
@@ -31,19 +31,13 @@ def cleanup(reduced_result, top_max):
         # if it is beginning of new group i.e. different k-length / score with previous
         if (k != prev_k) or (score != prev_score):
             count = 0
-            print("top {} for score = {} and k-length = {}".format(top_max,
-                                                                   score,
-                                                                   k))
 
         # if already outputted top n frequent words in the same group, skip
         if count == top_max:
             continue
 
         # output score, k-length, frequency, k-shingle
-        print("score: {}, ".format(line[0]) +
-            "k-length: {}, ".format(line[1]) +
-            "frequency: {}, ".format(line[2]) +
-            "shingle {}".format(line[3]))
+        yield (line[0], line[1], line[2], line[3])
 
         count += 1
         prev_score = score
