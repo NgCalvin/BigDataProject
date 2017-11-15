@@ -11,4 +11,4 @@ INPUT: processed csv - <score>,<text>
 OUTPUT: <score>#<k>#<k-shingle>tab<1>
 
 [reducer_for_hadoop.py]
-OUTPUT: ## <score>#<k>#<k-shingle>#<count>
+OUTPUT: <score>#<k>#<k-shingle>#<count>
