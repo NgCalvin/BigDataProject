@@ -1,0 +1,51 @@
+import sys
+
+from collections import namedtuple
+
+ShingleScore = namedtuple('ShingleScore', ['shingle', 'score', 'frequency'])
+
+class Predictor:
+    def __init__(self):
+        self.database = {}
+        self.max_shingle_length = 0
+
+    def addShingleScore(self, shingle_score):
+        shingle = shingle_score.shingle
+
+        shingle_scores = self.database.get(shingle, [])
+        shingle_scores.append(shingle_score)
+        self.database[shingle] = shingle_scores
+
+        shingle_len = len(shingle.split(' '))
+        self.max_shingle_length = max(self.max_shingle_length, shingle_len)
+
+    def predict(self, text):
+        words = text.split(' ')
+        word_count = len(words)
+
+        score_dict = {}
+        shingle_length_bound = min(self.max_shingle_length, word_count)
+        for shingle_len in range(1, shingle_length_bound + 1):
+            scores = []
+            for idx in range(word_count - shingle_len + 1):
+                shingle = ' '.join(words[idx : idx + shingle_len])
+                shingle_scores = self.database.get(shingle, None)
+                if shingle_scores:
+                    scores.extend(shingle_scores)
+            if len(scores) > 0:
+                weighted_sum = 0
+                weight = 0
+                for each_score in scores:
+                    weight += each_score.frequency
+                    weighted_sum += each_score.score * each_score.frequency
+                score_dict[shingle_len] = weighted_sum / weight
+
+        if len(score_dict) == 0:
+            print("Warning: Not enough shingles to predict", file=sys.stderr)
+            return 0
+
+        score_sum = 0
+        for shingle_len, score in score_dict.items():
+            print("Using {}-shingle, score: {}".format(shingle_len, score))
+            score_sum += score
+        return score_sum / len(score_dict)

@@ -58,7 +58,7 @@ class TextPreprocessor:
     def process(self, line):
         stopwords = self.get_stopwords()
 
-        clean_line = re.sub(r'[^a-zA-Z0-9 ]+', '', line.lower())
+        clean_line = re.sub(r'[^a-zA-Z0-9 ]+', '', line.strip().lower())
         clean_line = re.sub(r'\s{2,}', '', clean_line)
 
         words = clean_line.split(' ')
