@@ -7,6 +7,8 @@ ShingleScore = namedtuple('ShingleScore', ['shingle', 'score', 'frequency'])
 class Predictor:
     def __init__(self, shingle_len_filter = None):
         self.database = {}
+        self.shingle_count = 0
+        self.shingle_score_average = 0
         self.max_shingle_length = 0
         self.shingle_len_filter = shingle_len_filter
 
@@ -22,6 +24,10 @@ class Predictor:
         shingle_scores.append(shingle_score)
         self.database[shingle] = shingle_scores
 
+        self.shingle_score_average = \
+            (self.shingle_score_average * self.shingle_count + \
+                shingle_score.score) / (self.shingle_count + 1)
+        self.shingle_count += 1
         self.max_shingle_length = max(self.max_shingle_length, shingle_len)
 
     def predict(self, text):
@@ -47,7 +53,7 @@ class Predictor:
 
         if len(score_dict) == 0:
             print("Warning: Not enough shingles to predict", file=sys.stderr)
-            return 0
+            return self.shingle_score_average
 
         score_sum = 0
         for shingle_len, score in score_dict.items():
