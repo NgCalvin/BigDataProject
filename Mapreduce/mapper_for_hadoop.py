@@ -34,12 +34,16 @@ def main():
         #for k = 1 to k_len 
         #e.g. 1 to 5
         for k in range(k_min, k_len+1):
+            temp = [] # for checking duplication
             for idx in range(0, num_word - k + 1 ):
-                #score, k-length, k-shingle, count
-                #yield (score, k, ' '.join(word_list[idx:idx+k]), 1) 
-                # output
-                # <score>#<k>#<k-shingle>tab<1>
-                print '%s#%s#%s\t%s' % (score, k, ' '.join(word_list[idx:idx+k]), 1)
+                shingle = ' '.join(word_list[idx : idx + k])
+                if shingle not in temp: # non duplicated shingle in same review
+                    #score, k-length, k-shingle, count
+                    #yield (score, k, ' '.join(word_list[idx:idx+k]), 1) 
+                    # output
+                    # <score>#<k>#<k-shingle>tab<1>
+                    print '%s#%s#%s\t%s' % (score, k, shingle, 1)
+                    temp.append(shingle)
 
     
     # output last batch if necessary
