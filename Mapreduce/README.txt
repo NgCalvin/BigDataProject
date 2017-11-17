@@ -5,10 +5,13 @@ To run the mapreduce, you can:
 2) execute the whole main.py in python interpreter and change the directory in sys.path.append if necessary
 
 #########################################
-Hadoop Mapreduce version
+<Hadoop Mapreduce version>
 [mapper_for_hadoop.py]
 INPUT: processed csv - <score>,<text>
 OUTPUT: <score>#<k>#<k-shingle>tab<1>
 
 [reducer_for_hadoop.py]
+This step ignores shingles that only appears once, i.e. count==1
+This dracstically reduced the output from 1GB to 188MB
 OUTPUT: <score>#<k>#<k-shingle>#<count>
+########################################
