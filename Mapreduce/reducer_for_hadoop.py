@@ -5,6 +5,11 @@
 ## <score>#<k>#<k-shingle>tab<1>
 ## output
 ## <score>#<k>#<k-shingle>#<count>
+## v2
+## fixed initialize count = 1
+## output if count > 1
+## output tab delimited
+## <score>\t<k>\t<k-shingle>\t<count>
 
 import sys
 
@@ -28,16 +33,18 @@ def main():
             count += 1
         else:
             # output 
-            if current_line <> None:
-                print '%s#%s' % (current_line, count)
+            if current_line <> None and count > 1:
+                current_line = '\t'.join(current_line.split('#'))
+                print '%s\t%s' % (current_line, count)
 
             # initialize
             current_line = line
-            count = 0
+            count = 1
 
 
     # output last batch if necessary
-    if current_line <> None:
+    if current_line <> None and count > 1:
+        line = '\t'.join(line.split('#'))
         print '%s#%s' % (line, count)
 
 
