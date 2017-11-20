@@ -19,5 +19,5 @@ sample output file: part-00000_trial2
 <Filtering>
 run "main_filtering.py"
 and it is running "filtering.py"
-output filtered.csv with header = score, k, frequency, shinlge
+output filtered.csv with header = score, k, frequency, shingle
 ########################################
