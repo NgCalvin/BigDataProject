@@ -12,7 +12,7 @@ SCORE_MIN = 1
 SCORE_MAX = 5
 
 
-def filter_result(file_name, top_max):
+def filter_result(file_name, top_max, file_csv):
     #get mapped result
     data = list(csv.reader(open(file_name, 'rb'), delimiter='\t'))
     #data format: score, k-length, k-shingle, count
@@ -36,7 +36,8 @@ def filter_result(file_name, top_max):
     prev_score = SCORE_MIN - 1
     prev_k = 1-1
     count = 0
-
+    
+    output = []
 
     for line in data:
         # current score and k-length for this record
@@ -55,9 +56,16 @@ def filter_result(file_name, top_max):
 
 
         # output score, k-length, frequency, k-shingle
-        print (line[0], line[1], line[2], line[3])
-
+        #print (line[0], line[1], line[2], line[3])
+        output.append([line[0], line[1], line[2], line[3]])
 
         count += 1
         prev_score = score
         prev_k = k
+    
+    #export to csv
+    with open(file_csv+ '.csv', 'w') as output_csv:
+        writer = csv.writer(output_csv, delimiter=',', lineterminator='\n')
+        writer.writerow(['score', 'k', 'frequency', 'shingle']) # header
+        writer.writerows(output)
+        
