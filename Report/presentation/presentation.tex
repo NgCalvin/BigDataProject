@@ -1,0 +1,129 @@
+\documentclass[11pt]{beamer}
+\usetheme{Warsaw}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[]{algorithm2e}
+\usepackage{animate}
+\usepackage{scrextend}
+\usepackage{booktabs}
+\usepackage{graphicx}
+
+\author{Ng Wing Hin\\Lei Wen Fen\\Cheng Tin Chu\\Chan Hei Nam}
+
+\title{Ranking and Prediction of Amazon Fine Food based on Costumer's rating and review}
+\date{}
+%\setbeamercovered{transparent} 
+%\setbeamertemplate{navigation symbols}{} 
+%\logo{} 
+%\institute{} 
+%\date{} 
+%\subject{} 
+\begin{document}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section] % reset theorem numbering for each chapter
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
+\newtheorem{prop}{Property}[section]
+
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+%\begin{frame}
+%\tableofcontents
+%\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+User's rating and review is one of the explicit ways to determine product's popularity. In this project, we are trying to process the Amazon Fine Food Reviews such that the result can be used to predict the rating based on review.
+\end{frame}
+
+\begin{frame}
+\frametitle{System Structure}
+There are mainly three stages in our system : 
+\begin{labeling}{alligator}
+\item [Stage 1] Pro-processing the dataset.
+\item [Stage 2] Using MapReduce, Find the first hundred k-shingles , \(1\leq k\leq 5\), of each rating, \(0\leq \mbox{rating} \leq 5\).
+\item [Stage 3] Do prediction of rating based on the review input to the system. 
+\end{labeling}
+\end{frame}
+
+\begin{frame}
+\frametitle{Stage 1 Pre-processing}
+Pre-processing :
+\begin{algorithm}[H]
+ \KwData{Reviews.csv}
+ \KwResult{Result.csv}
+ \While{There exists next row inside Reviews.csv}
+ {
+ 	Extract \textbf{Rating} and \textbf{Text}\;
+ 	Lower \textbf{Text} and remove \emph{some} stopwords and punctuation\;
+ 	Write resulting line to Result.csv with format \(Rating, word_{1}, word_{2}, ...\)\;
+ }
+\end{algorithm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example result from Stage 1}
+
+Original data :
+
+\vspace{2mm}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l}
+  \toprule
+	Id, ProductId, UserId, ProfileName, HelpfullnessNumerator, HelpfullnessDenominator, Score, Time, Summary, Text\\
+  \midrule
+	1,B001E4KFG0,A3SGXH7AUHU8GW,delmartian,1,1,5,1303862400,Good Quality Dog Food,I have bought... \\
+	2,B00813GRG4,A1D87F6ZCVE5NK,dll pa,0,0,1,1346976000,Not as Advertised,"Product arrived labeled...\\
+	3,B000LQOCH0,ABXLMWJIXXAIN,"Natalia Corres ""Natalia Corres""",1,1,4,1219017600,"""Delight"" says it all","This is a confection...\\
+    4,B000UA0QIQ,A395BORC6FGVXV,Karl,3,3,2,1307923200,Cough Medicine,If you are looking... \\
+
+  \bottomrule
+\end{tabular}}
+
+\vspace{5mm}
+
+
+Result data : 
+
+\vspace{2mm}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l}
+  \toprule
+	Score, Text\\
+  \midrule
+ 	5,bought vitality canned dog food products good quality product looks... \\ 
+	1,product arrived labeled jumbo salted peanutsthe peanuts actually... \\ 
+	4,confection centuriesit light pillowy citrus gelatin nutsin case filberts...\\ 
+	2,looking secret ingredient robitussin believe iti got addition root... \\ 
+  \bottomrule
+\end{tabular}}
+\end{frame}
+
+\begin{frame}
+\frametitle{Stage 2 MapReduce}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Stage 3 Prediction}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Demostration}
+
+\end{frame}
+
+\end{document}
+
