@@ -39,9 +39,9 @@ if __name__ == '__main__':
     predictor = Predictor(shingle_length)
     df = pd.read_csv(database_file)
     for idx, r in df.iterrows():
-        shingle_score = ShingleScore(shingle=r['Shingle'],
-                                     score=r['Score'],
-                                     frequency=r['Frequency'])
+        shingle_score = ShingleScore(shingle=r['shingle'],
+                                     score=r['score'],
+                                     frequency=r['frequency'])
         predictor.addShingleScore(shingle_score)
 
     tp = TextPreprocessor()
