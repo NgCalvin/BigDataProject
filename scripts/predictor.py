@@ -5,12 +5,13 @@ from collections import namedtuple
 ShingleScore = namedtuple('ShingleScore', ['shingle', 'score', 'frequency'])
 
 class Predictor:
-    def __init__(self, shingle_len_filter = None):
+    def __init__(self, shingle_len_filter=None, ignore_warnings=False):
         self.database = {}
         self.shingle_count = 0
         self.shingle_score_average = 0
         self.max_shingle_length = 0
         self.shingle_len_filter = shingle_len_filter
+        self.ignore_warnings = ignore_warnings
 
     def addShingleScore(self, shingle_score):
         shingle = shingle_score.shingle
@@ -52,7 +53,9 @@ class Predictor:
                 score_dict[shingle_len] = weighted_sum / weight
 
         if len(score_dict) == 0:
-            print("Warning: Not enough shingles to predict", file=sys.stderr)
+            if not self.ignore_warnings:
+                print('Warning: Not enough shingles to predict',
+                      file=sys.stderr)
             return self.shingle_score_average
 
         score_sum = 0

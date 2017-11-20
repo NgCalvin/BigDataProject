@@ -36,7 +36,7 @@ if __name__ == '__main__':
         except (ValueError, TypeError):
             argv.append(shingle_length_str)
 
-    predictor = Predictor(shingle_length)
+    predictor = Predictor(shingle_len_filter=shingle_length)
     df = pd.read_csv(database_file)
     for idx, r in df.iterrows():
         shingle_score = ShingleScore(shingle=r['shingle'],
