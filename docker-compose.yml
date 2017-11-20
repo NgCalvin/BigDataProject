@@ -5,6 +5,7 @@ services:
     image: jupyter/scipy-notebook:c8797824e8c0
     volumes:
       - ./notebooks:/home/jovyan/notebooks
+      - ./scripts:/home/jovyan/notebooks/scripts:ro
     command: start-notebook.sh --NotebookApp.token=''
     ports:
       - "8888:8888"
