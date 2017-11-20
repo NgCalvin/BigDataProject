@@ -14,4 +14,10 @@ OUTPUT: <score>#<k>#<k-shingle>tab<1>
 This step ignores shingles that only appears once, i.e. count==1
 This dracstically reduced the output from 1GB to 188MB
 OUTPUT: <score>#<k>#<k-shingle>#<count>
+sample output file: part-00000_trial2
+########################################
+<Filtering>
+run main_filtering.py
+and it is running "filtering.py"
+output filtered.csv with header = score, k, frequency, shinlge
 ########################################
