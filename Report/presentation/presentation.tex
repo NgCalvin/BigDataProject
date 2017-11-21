@@ -57,15 +57,15 @@ There are mainly three stages in our system :
 
 \begin{frame}
 \frametitle{Stage 1 Pre-processing}
-Pre-processing :
 \begin{algorithm}[H]
  \KwData{Reviews.csv}
- \KwResult{Result.csv}
+ \KwResult{Preprocessed.csv}
+ \caption{Pre-processing}
  \While{There exists next row inside Reviews.csv}
  {
  	Extract \textbf{Rating} and \textbf{Text}\;
  	Lower \textbf{Text} and remove \emph{some} stopwords and punctuation\;
- 	Write resulting line to Result.csv with format \(Rating, word_{1}, word_{2}, ...\)\;
+ 	Returning line with format \(Rating, word_{1}, word_{2}, ...\)\;
  }
 \end{algorithm}
 \end{frame}
@@ -113,10 +113,46 @@ Result data :
 \begin{frame}
 \frametitle{Stage 2 MapReduce}
 
+\begin{algorithm}[H]
+	\KwData{Preprocessed.csv}
+	\KwResult{MapRed\_Result.csv}
+	\caption{MapReduce}
+	Mapper :\\
+	\While{There exists next row inside Preprocessed.csv}
+	{
+		\For{$k \leftarrow 1$ \KwTo $5$}
+		{
+		\label{forins}
+		Find all k-shingles\;
+			\For{Each shingle found}
+			{
+			Return \(<<\mbox{Rating, k, shingle}>,1>\);	
+			}
+   		}
+	}
+	Sort by Rating then k\;
+	Reducer : Sum up the value and return \(<\mbox{Rating, k, frequency, shingle}>\)\;
+\end{algorithm}
+
 \end{frame}
 
 \begin{frame}
 \frametitle{Stage 3 Prediction}
+
+\begin{algorithm}[H]
+	\KwData{MapRed\_Result.csv}
+	\KwResult{Batch Predicted Rating}
+	\caption{Prediction Model}
+	Split the whole dataset into three set, \textbf{Test}, \textbf{Validation}, \textbf{Prediction}\;
+	\textbf{Validation} set is for estimating the weighted formula for doing prediction by regression.\;
+	\textbf{Prediction} set is for demonstrating prediction in batch\;
+	
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Weighted formula for calculating prediction rating}
 
 \end{frame}
 
