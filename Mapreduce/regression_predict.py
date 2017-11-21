@@ -6,9 +6,9 @@ import csv
 import pandas as pd
 import numpy as np
 
-def regress_predict(input_file, score_col = ['Score'], 
-                    predictor_col = [ 'Predictor 1 Score', 'Predictor 2 Score', 'Predictor 3 Score', 'Predictor 4 Score', 'Predictor 5 Score'],
-                    coeff, intercept, output_file):
+def regress_predict(input_file, coeff, intercept, output_file,
+                    score_col = ['Score'], 
+                    predictor_col = [ 'Predictor 1 Score', 'Predictor 2 Score', 'Predictor 3 Score', 'Predictor 4 Score', 'Predictor 5 Score']):
     # input_file = csv file with predictor result
     # score_col = name of the "Score" columns
     # predictor_col = names of the Predictor columns
