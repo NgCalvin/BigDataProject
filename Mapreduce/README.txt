@@ -21,3 +21,12 @@ run "main_filtering.py"
 and it is running "filtering.py"
 output filtered.csv with header = score, k, frequency, shingle
 ########################################
+<Regression>
+There are two steps: (1) to training the regression coeff and (2) using the regression coeff to predict
+
+[Training step - regression_training.py]
+Using the 70% data >>> with Predictors <<< to train the regression coeff
+
+[Prediction step - regression_predict.py]
+using the regression coeff with Predictors to get the prediction
+
