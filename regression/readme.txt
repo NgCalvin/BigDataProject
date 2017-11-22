@@ -20,48 +20,42 @@ The following is the input and result file:
 
 [100 rows]
 
-training file: 
-"mapred-filtered-100-metrics-training"
-https://drive.google.com/open?id=15MlCCHPEjcb6YjaAd6fZhKsNFMZYz69r
+regression coefficient: intercept, beta_1 ~ beta_5
 
-regression coefficient: beta_1 ~ beta_5
-[[ 1.75900845
- [ 0.25175293]
- [ 0.14534007]
- [-0.04414925]
- [ 0.51880787]]
+-5.79370162
+1.75900845
+0.25175293
+0.14534007
+-0.04414925
+0.51880787
 
-regression intercept:
- [-5.79370162]
+training file: mapred-filtered-100-metrics.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-100-metrics.csv
 
-testing file:
-"mapred-filtered-100-predict"
-https://drive.google.com/open?id=1_NEUE4fYyusDF4Tlkz_SzYv-B9M9hYOx
+testing file: mapred-filtered-100-test.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-100-test.csv
 
-output file:
-"mapred-filtered-100-predict-with-reg"
-https://drive.google.com/open?id=1_Fuo_XCQQvwnr7VVInMHPJis1uZ1N3AR
+output file: mapred-filtered-100-regress-test.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-100-regress-test.csv
+
+
 
 [300 rows]
 
-trainig file:
-"mapred-filtered-300-metrics-training"
-https://drive.google.com/open?id=1L531-wD77NoywNoxiQ7gdK28kXx7efGK
+regression coefficient: intercept, beta_1 ~ beta_5
 
-regression coefficient: beta_1 ~ beta_5
-[[ 3.24943721]
- [ 0.27913471]
- [ 0.13868265]
- [ 0.05064995]
- [ 0.39289528]] 
- 
- regression intercept:
- [-11.98096962]
+-11.98096962
+3.24943721
+0.27913471
+0.13868265
+0.05064995
+0.39289528
 
-testing file:
-"mapred-filtered-300-predict"
-https://drive.google.com/open?id=1rW7ymVy7sYOEm1HquABOEqmrsTIwqm6b
+training file: mapred-filtered-300-metrics.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-300-metrics.csv
 
-output file:
-"mapred-filtered-300-predict-with-reg"
-https://drive.google.com/open?id=1LVyV8eZrAUTvsaC1VPYxeJxPyeLkgHM7
+testing file: mapred-filtered-300-test.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-300-test.csv
+
+output file: mapred-filtered-300-regress-test.csv
+https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-300-regress-test.csv
