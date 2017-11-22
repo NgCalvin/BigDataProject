@@ -10,6 +10,9 @@
 \usepackage{scrextend}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{tcolorbox}
+\usepackage{lipsum}
+\usepackage{systeme}
 
 \author{Ng Wing Hin\\Lei Wen Fen\\Cheng Tin Chu\\Chan Hei Nam}
 
@@ -46,21 +49,43 @@ User's rating and review is one of the explicit ways to determine product's popu
 \end{frame}
 
 \begin{frame}
+\frametitle{Basic statistics of the dataset}
+
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Basic statistics of the dataset]
+\centering
+\begin{tabular}{lll}
+	\hline
+	    					& Rating 	& Word(Processed)\\
+	\hline
+	Mean					& 4.18 		& 255\\
+%	Standard Deivation	& 1.31		& \\
+	Minimum       		& 1 			& 7\\
+	Maximum       		& 5 			& 14425\\
+%	First Quartile 		& 4 			& 				& \\
+%	Median 				& 4 			& 				& \\
+%	Third Quartile 		& 5 			& 				& \\
+	\hline
+\end{tabular}
+\end{tcolorbox}
+\end{frame}
+
+
+\begin{frame}
 \frametitle{System Structure}
 There are mainly three stages in our system : 
 \begin{labeling}{alligator}
-\item [Stage 1] Pro-processing the dataset.
-\item [Stage 2] Using MapReduce, Find the first hundred k-shingles , \(1\leq k\leq 5\), of each rating, \(0\leq \mbox{rating} \leq 5\).
+\item [Stage 1] Pre-processing the dataset.
+\item [Stage 2] Using MapReduce, find the first hundred k-shingles, \(1\leq k\leq 5\), of each rating, \(1 \leq \mbox{rating} \leq 5\).
 \item [Stage 3] Do prediction of rating based on the review input to the system. 
 \end{labeling}
 \end{frame}
 
+
 \begin{frame}
 \frametitle{Stage 1 Pre-processing}
+
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=\textbf{Algorithm 1}: Pre-processing]
 \begin{algorithm}[H]
- \KwData{Reviews.csv}
- \KwResult{Preprocessed.csv}
- \caption{Pre-processing}
  \While{There exists next row inside Reviews.csv}
  {
  	Extract \textbf{Rating} and \textbf{Text}\;
@@ -68,6 +93,8 @@ There are mainly three stages in our system :
  	Returning line with format \(Rating, word_{1}, word_{2}, ...\)\;
  }
 \end{algorithm}
+\end{tcolorbox}
+
 \end{frame}
 
 \begin{frame}
@@ -88,6 +115,7 @@ Original data :
     4,B000UA0QIQ,A395BORC6FGVXV,Karl,3,3,2,1307923200,Cough Medicine,If you are looking... \\
 
   \bottomrule
+  
 \end{tabular}}
 
 \vspace{5mm}
@@ -113,10 +141,8 @@ Result data :
 \begin{frame}
 \frametitle{Stage 2 MapReduce}
 
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=\textbf{Algorithm 2}: MapReduce]
 \begin{algorithm}[H]
-	\KwData{Preprocessed.csv}
-	\KwResult{MapRed\_Result.csv}
-	\caption{MapReduce}
 	Mapper :\\
 	\While{There exists next row inside Preprocessed.csv}
 	{
@@ -130,34 +156,110 @@ Result data :
 			}
    		}
 	}
-	Sort by Rating then k\;
-	Reducer : Sum up the value and return \(<\mbox{Rating, k, frequency, shingle}>\)\;
+	Reducer :\\
+	Sum up the value and return \(<\mbox{Rating, k, frequency, shingle}>\)\;
 \end{algorithm}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exmaple result from Stage 2}
+
+Result from MapReduce : \\
+\vspace{5mm}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{llll}
+  \toprule
+	Score& k& frequency& shingle\\
+  \midrule
+	3&4&23&food freshly openedpi likes\\
+	1&2&238&br tried\\
+	2&1&1601&say\\
+	3&4&27&coffeetea love organic coffee\\
+	
+  \bottomrule
+  
+\end{tabular}}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Stage 3 Prediction}
+
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=\textbf{Algorithm 3}: prediction?]
+
+\end{tcolorbox}
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Stage 3 Prediction}
 
-\begin{algorithm}[H]
-	\KwData{MapRed\_Result.csv}
-	\KwResult{Batch Predicted Rating}
-	\caption{Prediction Model}
-	Split the whole dataset into three set, \textbf{Test}, \textbf{Validation}, \textbf{Prediction}\;
-	\textbf{Validation} set is for estimating the weighted formula for doing prediction by regression.\;
-	\textbf{Prediction} set is for demonstrating prediction in batch\;
-	
-\end{algorithm}
-
 \end{frame}
 
 \begin{frame}
 \frametitle{Weighted formula for calculating prediction rating}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Weighted formula]
+
+For each k : \\
+\(t_{i} = \mbox{k-shingles}\)
+
+\centering
+\(\mbox{Weighted Score} = \frac{\displaystyle\sum_i \sum_j \mbox{score}_j(t_{i}) \times \mbox{freq}_j(t_{i})}{\displaystyle\sum_i \sum_j \mbox{freq}_j(t_{i})}\)
+
+\raggedright
+where \(i = i^{th}\) k-shingle and \(1 \leq j \leq 5\).
+
+\end{tcolorbox}
 
 \end{frame}
 
 \begin{frame}
+\frametitle{Regression Model}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Regression model]
+System of linear equation :
+\begin{equation}
+\begin{alignedat}{4}
+y_1 &= \beta_0  + \beta_1 x_1 + \dots + \beta_5 x_5\\
+y_2 &= \beta_0 + \beta_1 x_1 + \dots + \beta_5 x_5\\
+\;\vdots  &            \qquad\qquad\qquad\vdots \\
+y_n &= \beta_0 + \beta_1 x_1 + \dots + \beta_5 x_5
+\end{alignedat}
+\end{equation}
+In matrix form :
+
+\centering
+\(\textbf{Y}= \boldsymbol{\beta_0}+\boldsymbol{\beta} \cdot \textbf{X}\)
+
+\raggedright
+where\\
+\(\textbf{Y}\) is a \(n\times1\) matrix,\\
+\(\boldsymbol{\beta_0}\) is a \(n\times 1\) matrix,\\
+\(\boldsymbol{\beta}\) is a \(5\times 1\) matrix,\\
+\(\textbf{X}\) is a \(n\times 5\) matrix.
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Regression Model}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Complexity]
+key computation step:
+\begin{itemize}
+\item \(\textbf{X}^T\textbf{X} \mbox{ in O(} n\times k^2 \mbox{)}\)
+\item \((\textbf{X}^T\textbf{X})^{-1} \mbox{ in O(} k^3 \mbox{)}\)
+\end{itemize}
+As \(n>>k\), the overall complexity is O(\(n\)).
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
 \frametitle{Demostration}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conculsion}
 
 \end{frame}
 
