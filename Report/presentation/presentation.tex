@@ -155,7 +155,7 @@ Result data :
 			Find all k-shingles\;
 			\For{Each shingle found}
 			{
-				Return \(<<\mbox{rating, k, shingle}>,1>\);
+				Return \(<<\mbox{rating, k, shingle}>, 1>\);
 			}
  		}
 	}
@@ -174,7 +174,7 @@ Result data :
 	]
 \begin{algorithm}[H]
 	\ForAll{tuples with key \(<\mbox{rating, k, shingle}> \)} {
-		frequency = sum of all tuple values;\\
+		frequency = sum of all tuple values\;
 		Return \(<\mbox{rating, k, frequency, shingle}>\)\;
 	}
 \end{algorithm}
@@ -207,35 +207,89 @@ Result from MapReduce : \\
 \begin{frame}
 \frametitle{Stage 3 Prediction}
 
-\begin{tcolorbox}[
-	colback=blue!5,
-	colframe=blue!40!black,
-	title=\textbf{Algorithm 3}: Prediction]
-\end{tcolorbox}
+	\begin{tcolorbox}[
+		colback=blue!5,
+		colframe=blue!40!black,
+		title=\textbf{Algorithm 3}: Prediction using length-k shingles]
 
+		\begin{algorithm}[H]
+
+			Load the \(records\) from \textbf{Shingle Database}\;
+			Find all \textit{k-shingles} in the input text\;
+			\ForEach{shingle}
+			{
+				Collect all records of \textit{shingle} from database\;
+				Append to \(RecordsFound\)\;
+			}
+			\eIf {\(RecordsFound\) is not empty}
+			{
+				\(score\) = weighted average of \(RecordsFound\)\;
+			}
+			{
+				\(score\) = average of all records in database\;
+			}
+			return \(score\)\;
+
+		\end{algorithm}
+
+	\end{tcolorbox}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Stage 3 Prediction}
+
+	\begin{tcolorbox}[
+		colback=blue!5,
+		colframe=blue!40!black!60,
+		title=Prediction Example]
+
+		Database:
+		\begin{center}
+			\begin{tabular}{llll}
+			  \toprule
+					Score & k & frequency & shingle \\
+			  \midrule
+					5 & 1 & 68 & good \\
+					4 & 1 & 35 & good \\
+					5 & 1 & 57 & really \\
+			  \bottomrule
+			\end{tabular}
+		\end{center}
+
+		Input: \textit{this is \underline{really} \underline{good}} \\
+		Score:
+		\begin{center}
+			\(\frac{5 \times 68 + 4 \times 35 + 5 \times 57}{68 + 35 + 57}\) = 4.78125
+		\end{center}
+
+	\end{tcolorbox}
 \end{frame}
 
 \begin{frame}
 \frametitle{Stage 3 Prediction}
 
+	Using shingles of different lengths, we got different performances:
+
+	\begin{center}
+		\begin{tabular}{ll}
+			\toprule
+				Shingle Length & Mean Squared Error \\
+			\midrule
+				1 & 0.228009 \\
+				2 & 0.328691 \\
+				3 & 0.418788 \\
+				4 & 0.442992 \\
+				5 & 0.444860 \\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	\vspace{5mm}
+	But we need to respect shingles of different length. How?
+
 \end{frame}
 
-\begin{frame}
-\frametitle{Weighted formula for calculating prediction rating}
-\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Weighted formula]
-
-For each k : \\
-\(t_{i} = \mbox{k-shingles}\)
-
-\centering
-\(\mbox{Weighted Score} = \frac{\displaystyle\sum_i \sum_j \mbox{score}_j(t_{i}) \times \mbox{freq}_j(t_{i})}{\displaystyle\sum_i \sum_j \mbox{freq}_j(t_{i})}\)
-
-\raggedright
-where \(i = i^{th}\) k-shingle and \(1 \leq j \leq 5\).
-
-\end{tcolorbox}
-
-\end{frame}
 
 \begin{frame}
 \frametitle{Regression Model}
