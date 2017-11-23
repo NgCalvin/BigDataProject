@@ -14,16 +14,16 @@
 \usepackage{lipsum}
 \usepackage{systeme}
 
-\author{Ng Wing Hin\\Lei Wen Fen\\Cheng Tin Chu\\Chan Hei Nam}
+\author{Chan Hei Nam, \\Cheng Tin Chu, \\Lei Wen Feng, \\Ng Wing Hin}
 
 \title{Ranking and Prediction of Amazon Fine Food based on Costumer's rating and review}
 \date{}
-%\setbeamercovered{transparent} 
-%\setbeamertemplate{navigation symbols}{} 
-%\logo{} 
-%\institute{} 
-%\date{} 
-%\subject{} 
+%\setbeamercovered{transparent}
+%\setbeamertemplate{navigation symbols}{}
+%\logo{}
+%\institute{}
+%\date{}
+%\subject{}
 \begin{document}
 
 \theoremstyle{plain}
@@ -72,11 +72,11 @@ User's rating and review is one of the explicit ways to determine product's popu
 
 \begin{frame}
 \frametitle{System Structure}
-There are mainly three stages in our system : 
+There are mainly three stages in our system :
 \begin{labeling}{alligator}
 \item [Stage 1] Pre-processing the dataset.
 \item [Stage 2] Using MapReduce, find the first hundred k-shingles, \(1\leq k\leq 5\), of each rating, \(1 \leq \mbox{rating} \leq 5\).
-\item [Stage 3] Do prediction of rating based on the review input to the system. 
+\item [Stage 3] Do prediction of rating based on the review input to the system.
 \end{labeling}
 \end{frame}
 
@@ -115,13 +115,13 @@ Original data :
     4,B000UA0QIQ,A395BORC6FGVXV,Karl,3,3,2,1307923200,Cough Medicine,If you are looking... \\
 
   \bottomrule
-  
+
 \end{tabular}}
 
 \vspace{5mm}
 
 
-Result data : 
+Result data :
 
 \vspace{2mm}
 
@@ -130,10 +130,10 @@ Result data :
   \toprule
 	Score, Text\\
   \midrule
- 	5,bought vitality canned dog food products good quality product looks... \\ 
-	1,product arrived labeled jumbo salted peanutsthe peanuts actually... \\ 
-	4,confection centuriesit light pillowy citrus gelatin nutsin case filberts...\\ 
-	2,looking secret ingredient robitussin believe iti got addition root... \\ 
+ 	5,bought vitality canned dog food products good quality product looks... \\
+	1,product arrived labeled jumbo salted peanutsthe peanuts actually... \\
+	4,confection centuriesit light pillowy citrus gelatin nutsin case filberts...\\
+	2,looking secret ingredient robitussin believe iti got addition root... \\
   \bottomrule
 \end{tabular}}
 \end{frame}
@@ -141,25 +141,45 @@ Result data :
 \begin{frame}
 \frametitle{Stage 2 MapReduce}
 
-\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=\textbf{Algorithm 2}: MapReduce]
+\begin{tcolorbox}[
+	colback=blue!5,
+	colframe=blue!40!black,
+	title=\textbf{Algorithm 2}: MapReduce (Mapper)
+	]
 \begin{algorithm}[H]
-	Mapper :\\
 	\While{There exists next row inside Preprocessed.csv}
 	{
 		\For{$k \leftarrow 1$ \KwTo $5$}
 		{
-		\label{forins}
-		Find all k-shingles\;
+			\label{forins}
+			Find all k-shingles\;
 			\For{Each shingle found}
 			{
-			Return \(<<\mbox{Rating, k, shingle}>,1>\);	
+				Return \(<<\mbox{rating, k, shingle}>,1>\);
 			}
-   		}
+ 		}
 	}
-	Reducer :\\
-	Sum up the value and return \(<\mbox{Rating, k, frequency, shingle}>\)\;
 \end{algorithm}
 \end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Stage 2 MapReduce}
+
+\begin{tcolorbox}[
+	colback=blue!5,
+	colframe=blue!30!black,
+	title=\textbf{Algorithm 2}: MapReduce (Reducer)
+	]
+\begin{algorithm}[H]
+	\ForAll{tuples with key \(<\mbox{rating, k, shingle}> \)} {
+		frequency = sum of all tuple values;\\
+		Return \(<\mbox{rating, k, frequency, shingle}>\)\;
+	}
+\end{algorithm}
+\end{tcolorbox}
+
 \end{frame}
 
 \begin{frame}
@@ -176,9 +196,9 @@ Result from MapReduce : \\
 	1&2&238&br tried\\
 	2&1&1601&say\\
 	3&4&27&coffeetea love organic coffee\\
-	
+
   \bottomrule
-  
+
 \end{tabular}}
 
 \end{frame}
@@ -187,8 +207,10 @@ Result from MapReduce : \\
 \begin{frame}
 \frametitle{Stage 3 Prediction}
 
-\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=\textbf{Algorithm 3}: prediction?]
-
+\begin{tcolorbox}[
+	colback=blue!5,
+	colframe=blue!40!black,
+	title=\textbf{Algorithm 3}: Prediction]
 \end{tcolorbox}
 
 \end{frame}
@@ -264,4 +286,3 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 \end{frame}
 
 \end{document}
-
