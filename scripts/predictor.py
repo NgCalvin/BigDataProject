@@ -4,14 +4,36 @@ from collections import namedtuple
 
 ShingleScore = namedtuple('ShingleScore', ['shingle', 'score', 'frequency'])
 
-class Predictor:
-    def __init__(self, shingle_len_filter=None, ignore_warnings=False):
+
+class BasePredictor:
+    def addShingleScore(self, shingle_score):
+        raise NotImplementedError('addShingleScore() is not implemented')
+
+    def predict(self, text):
+        raise NotImplementedError('predict() is not implemented')
+
+
+class UniformPredictor(BasePredictor):
+    def __init__(self, value=0):
+        super().__init__()
+        self.value = value
+
+    def addShingleScore(self, shingle_score):
+        # do nothing
+        pass
+
+    def predict(self, text):
+        return self.value
+
+
+class Predictor(BasePredictor):
+    def __init__(self, shingle_len_filter=None):
+        super().__init__()
         self.database = {}
         self.shingle_count = 0
         self.shingle_score_average = 0
         self.max_shingle_length = 0
         self.shingle_len_filter = shingle_len_filter
-        self.ignore_warnings = ignore_warnings
 
     def addShingleScore(self, shingle_score):
         shingle = shingle_score.shingle
@@ -53,9 +75,6 @@ class Predictor:
                 score_dict[shingle_len] = weighted_sum / weight
 
         if len(score_dict) == 0:
-            if not self.ignore_warnings:
-                print('Warning: Not enough shingles to predict',
-                      file=sys.stderr)
             return self.shingle_score_average
 
         score_sum = 0
