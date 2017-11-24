@@ -6,37 +6,35 @@ import pandas as pd
 from text_preprocessor import TextPreprocessor
 from predictor import Predictor, ShingleScore
 
+def parse_args():
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Predict score a text.')
+    parser.add_argument('--text', metavar='Text',
+                        help='the text to be predicted')
+    parser.add_argument('--database', metavar='Database', required=True,
+                        help='the database file for prediction')
+    parser.add_argument('--shingle-length', metavar='ShingleLength', type=int,
+                        help='the shingle length the predictor focus on')
+
+    args = parser.parse_args()
+
+    return args
+
+def predict(text_preprocessor, predictor, text):
+    processed_text = text_preprocessor.process(text)
+    return predictor.predict(processed_text)
+
 if __name__ == '__main__':
-    argv = sys.argv.copy()
-    argv.reverse()
+    args = parse_args()
 
-    argc = len(argv)
-    if argc < 2 or argc > 5:
-        try:
-            script_name = argv[-1]
-        except IndexError:
-            script_name = 'predict.py'
-        print('Usage: python {} <DatabaseFile> [ShingleLength] [Text]'.format(script_name),
-              file=sys.stderr)
-        exit(1)
-    else:
-        argv.pop()
-
-    database_file = argv.pop()
+    database_file = args.database
     if not os.path.exists(database_file):
         print("Cannot find database file \"{}\"".format(database_file),
               file=sys.stderr)
         exit(2)
 
-    shingle_length = None
-    if len(argv) != 0:
-        shingle_length_str = argv.pop()
-        try:
-            shingle_length = int(shingle_length_str)
-        except (ValueError, TypeError):
-            argv.append(shingle_length_str)
-
-    predictor = Predictor(shingle_len_filter=shingle_length)
+    predictor = Predictor(shingle_len_filter=args.shingle_length)
     df = pd.read_csv(database_file)
     for idx, r in df.iterrows():
         shingle_score = ShingleScore(shingle=r['shingle'],
@@ -45,25 +43,23 @@ if __name__ == '__main__':
         predictor.addShingleScore(shingle_score)
 
     tp = TextPreprocessor()
-    def predict(text):
-        processed_text = tp.process(text)
-        return predictor.predict(processed_text)
 
-    if len(argv) != 0:
+    input_text = args.text
+    if input_text is not None and len(input_text) > 0
         text = argv.pop()
-        score = predict(text)
+        score = predict(tp, predictor, input_text)
         print("Score = {}".format(score))
-        exit(0)
+        exit()
 
     # interactive mode
     text = None
     while text is None or len(text.strip()) == 0:
         try:
             text = input('predict> ')
-            score = predict(text)
+            score = predict(tp, predictor, text)
             print("Score = {}".format(score))
         except (EOFError, KeyboardInterrupt):
             print()
-            exit(0)
+            exit()
 
         text = None
