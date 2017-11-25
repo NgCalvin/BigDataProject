@@ -59,3 +59,48 @@ https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-300-test.c
 
 output file: mapred-filtered-300-regress-test.csv
 https://storage.googleapis.com/cmsc-5741-project-data/mapred-filtered-300-regress-test.csv
+
+##############################################################################
+<Re-run using top_max = 100>
+
+<Preprocess Stage>
+[stopword list]
+Add to stopword list:
+br
+
+Remove from stopword list: 
+but	
+most	
+least	
+never	
+only	
+ever	
+still	
+although
+though
+yet
+very
+
+The "br" is the break line command in Text.
+This was not removed before.
+
+Train Data:
+preprocessed_70.csv
+https://drive.google.com/open?id=1engP7OQkgF65BYuiUW0zFcO5HfDpM_9y
+
+Test Data:
+preprocessed_30.csv
+https://drive.google.com/open?id=1FezHsMEcQEvLjuTiRAP_qcccGgNTmJBH
+
+<Filtering Stage>
+filter_top_100.csv
+https://drive.google.com/open?id=1zutpxAdNew79epttFgdsRu2l6V5cK60S
+
+<Prediction Stage>
+Predict using score 3 as default score
+predict_30_3_with_reg.csv
+https://drive.google.com/open?id=11MhxKk_J36CvkDQ22nPXaL8yPkV5h8WY
+
+Predict using train data mean as default score
+predict_30_train_mean_with_reg.csv
+https://drive.google.com/open?id=1emQ2jPqObuApR2QgVvLIbFT7KD8bmj3Z
