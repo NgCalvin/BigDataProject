@@ -11,9 +11,12 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{tcolorbox}
 \usepackage{lipsum}
 \usepackage{systeme}
+\usepackage{multirow}
+
 
 \author{Chan Hei Nam, \\Cheng Tin Chu, \\Lei Wen Feng, \\Ng Wing Hin}
 
@@ -270,20 +273,31 @@ Result from MapReduce : \\
 \end{frame}
 
 \begin{frame}
+\frametitle{Demostration}
+
+	\begin{center}
+		\includegraphics[width=7.5cm]{demo} \\
+		Video Demo: \url{https://goo.gl/fqaTSo}
+	\end{center}
+
+\end{frame}
+
+
+\begin{frame}
 \frametitle{Stage 3 Prediction}
 
 	Using shingles of different lengths, we got different performances:
 
 	\begin{center}
-		\begin{tabular}{ll}
+		\begin{tabular}{cc}
 			\toprule
 				Shingle Length & Mean Squared Error \\
 			\midrule
-				1 & 0.228009 \\
-				2 & 0.328691 \\
-				3 & 0.418788 \\
-				4 & 0.442992 \\
-				5 & 0.444860 \\
+				1 & 1.596 \\
+				2 & 2.160 \\
+				3 & 2.918 \\
+				4 & 3.089 \\
+				5 & 3.112 \\
 			\bottomrule
 		\end{tabular}
 	\end{center}
@@ -292,6 +306,20 @@ Result from MapReduce : \\
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Regression Model}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Regression model]
+Regression equation :
+\begin{equation}
+\begin{alignedat}{1}
+y &= \beta_0  + \beta_1 x_1 + \dots + \beta_5 x_5\\
+\end{alignedat}
+\end{equation}
+where $x_i$ is the $i$-th shingle score, for $i=1,...,5$
+\end{tcolorbox}
+\end{frame}
+
+
 
 \begin{frame}
 \frametitle{Regression Model}
@@ -299,16 +327,16 @@ Result from MapReduce : \\
 System of linear equation :
 \begin{equation}
 \begin{alignedat}{4}
-y_1 &= \beta_0  + \beta_1 x_1 + \dots + \beta_5 x_5\\
-y_2 &= \beta_0 + \beta_1 x_1 + \dots + \beta_5 x_5\\
+y_1 &= \beta_0  + \beta_1 x_{11} + \dots + \beta_5 x_{15}\\
+y_2 &= \beta_0 + \beta_1 x_{21} + \dots + \beta_5 x_{25}\\
 \;\vdots  &            \qquad\qquad\qquad\vdots \\
-y_n &= \beta_0 + \beta_1 x_1 + \dots + \beta_5 x_5
+y_n &= \beta_0 + \beta_1 x_{n1} + \dots + \beta_5 x_{n5}
 \end{alignedat}
 \end{equation}
 In matrix form :
 
 \centering
-\(\textbf{Y}= \boldsymbol{\beta_0}+\boldsymbol{\beta} \cdot \textbf{X}\)
+\(\textbf{Y}= \boldsymbol{\beta_0}+\textbf{X} \cdot \boldsymbol{\beta} \)
 
 \raggedright
 where\\
@@ -319,6 +347,8 @@ where\\
 \end{tcolorbox}
 \end{frame}
 
+
+
 \begin{frame}
 \frametitle{Regression Model}
 \begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Complexity]
@@ -327,22 +357,143 @@ key computation step:
 \item \(\textbf{X}^T\textbf{X} \mbox{ in O(} n\times k^2 \mbox{)}\)
 \item \((\textbf{X}^T\textbf{X})^{-1} \mbox{ in O(} k^3 \mbox{)}\)
 \end{itemize}
+n = number of rows from train data\\
+k = number of regression parameters = 5\\
 As \(n>>k\), the overall complexity is O(\(n\)).
 \end{tcolorbox}
 \end{frame}
 
+
+
 \begin{frame}
-\frametitle{Demostration}
+\frametitle{Result}
+
+	\centering
+	Shingle Match Performance
 
 	\begin{center}
-		\includegraphics[width=7.5cm]{demo} \\
-		Video Demo: \url{https://goo.gl/fqaTSo}
+		%\begin{tabular}{11}
+		\begin{tabular}{cc}
+			\toprule
+				Shingle Length & Match \% \\
+			\midrule
+				1 & 99.87\% \\
+				2 & 67.88\% \\
+				3 & 16.47\% \\
+				4 & 2.19\% \\
+				5 & 0.30\% \\
+			\bottomrule
+		\end{tabular}
 	\end{center}
+	\vspace{5mm}
+
+
+
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Conculsion}
+\frametitle{Result(Cont'd)}
+
+	\centering
+	Performance - MSE comparison
+
+	\begin{center}
+	
+		\begin{tabular}{ccc}
+			\toprule
+				\multirow{2}{*}{Prediction Method} &
+				\multicolumn{2}{c}{Default Score}\\
+				\cline{2-3}
+				& 3 & Train Mean = 4.18 \\
+				%Method & testing \\
+			\midrule
+				Train Data Mean & 1.717 & 1.717 \\
+				\hline
+				1-shingle & 1.596 & 1.596\\
+				2-shingle & 2.160 & 1.595\\
+				3-shingle & 2.918 & 1.667\\
+				4-shingle & 3.089 & 1.704\\
+				5-shingle & 3.112 & 1.710\\
+				\hline
+				Regression & 1.449 & 1.369\\
+				
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	\vspace{5mm}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Result(Cont'd)}
+
+\begin{figure}[h!]
+  \centering
+  Error Spread of 1-shingle\\
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 3}
+    \includegraphics[width=\linewidth]{predictor_1_error_3}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 4.18}
+    \includegraphics[width=\linewidth]{predictor_1_error_train_mean}
+  \end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Result(Cont'd)}
+
+\begin{figure}[h!]
+  \centering
+  Error Spread of 5-shingle\\
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 3}
+    \includegraphics[width=\linewidth]{predictor_5_error_3}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 4.18}
+    \includegraphics[width=\linewidth]{predictor_5_error_train_mean}
+  \end{subfigure}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Result(Cont'd)}
+
+\begin{figure}[h!]
+  \centering
+  Error Spread of Regression Method\\
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 3}
+    \includegraphics[width=\linewidth]{reg_error_3}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \caption{Default Score = 4.18}
+    \includegraphics[width=\linewidth]{reg_error_train_mean}
+  \end{subfigure}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Conclusion}
+	
+	\begin{itemize}
+		\setbeamertemplate{itemize items}[square]
+		\item Use Train Mean as default score.
+		\item The higher the match \%, the more accurate prediction.
+		\item 1-shingle method is better than other k-shingle methods
+		\item Regression is the best method.
+	\end{itemize}		
+	
+
+	
+
 
 \end{frame}
 
