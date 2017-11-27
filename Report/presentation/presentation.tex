@@ -12,6 +12,7 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\captionsetup{compatibility=false}
 \usepackage{tcolorbox}
 \usepackage{lipsum}
 \usepackage{systeme}
@@ -79,7 +80,7 @@ User's rating and review is one of the explicit ways to determine product's popu
 \frametitle{System Structure}
 There are mainly three stages in our system :
 \begin{labeling}{alligator}
-\item [Stage 1] Pre-processing the dataset.
+\item [Stage 1] Pre-processing the dataset. Also, splitting 70\% of the dataset as training set and 30\% as testing set.
 \item [Stage 2] Using MapReduce, find the first hundred k-shingles, \(1\leq k\leq 5\), of each rating, \(1 \leq \mbox{rating} \leq 5\).
 \item [Stage 3] Do prediction of rating based on the review input to the system.
 \end{labeling}
@@ -198,13 +199,16 @@ Result from MapReduce : \\
 	Score& k& frequency& shingle\\
   \midrule
 	3&4&23&food freshly openedpi likes\\
-	1&2&238&br tried\\
+	5&2&1712&very nice\\
 	2&1&1601&say\\
 	3&4&27&coffeetea love organic coffee\\
 
   \bottomrule
 
 \end{tabular}}
+\vspace{5mm}
+
+Perform sorting and filtering to output top 100 frequent shingles for each score and each \(k\).
 
 \end{frame}
 
