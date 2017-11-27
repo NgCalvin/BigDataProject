@@ -277,17 +277,6 @@ Perform sorting and filtering to output top 100 frequent shingles for each score
 \end{frame}
 
 \begin{frame}
-\frametitle{Demostration}
-
-	\begin{center}
-		\includegraphics[width=7.5cm]{demo} \\
-		Video Demo: \url{https://goo.gl/fqaTSo}
-	\end{center}
-
-\end{frame}
-
-
-\begin{frame}
 \frametitle{Stage 3 Prediction}
 
 	Using shingles of different lengths, we got different performances:
@@ -403,7 +392,7 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 	Performance - MSE comparison
 
 	\begin{center}
-	
+
 		\begin{tabular}{ccc}
 			\toprule
 				\multirow{2}{*}{Prediction Method} &
@@ -421,7 +410,7 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 				5-shingle & 3.112 & 1.710\\
 				\hline
 				Regression & 1.449 & 1.369\\
-				
+
 			\bottomrule
 		\end{tabular}
 	\end{center}
@@ -483,22 +472,26 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Demostration}
+
+	\begin{center}
+		\includegraphics[width=7.5cm]{demo} \\
+		Video Demo: \url{https://goo.gl/fqaTSo}
+	\end{center}
+
+\end{frame}
 
 \begin{frame}
 \frametitle{Conclusion}
-	
+
 	\begin{itemize}
 		\setbeamertemplate{itemize items}[square]
 		\item Use Train Data Mean as default score.
 		\item The higher the match \%, the more accurate prediction.
 		\item 1-shingle method is better than other k-shingle methods.
 		\item Regression method is the best method.
-	\end{itemize}		
-	
-
-	
-
-
+	\end{itemize}
 \end{frame}
 
 \end{document}
