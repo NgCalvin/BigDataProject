@@ -345,13 +345,16 @@ where\\
 \begin{frame}
 \frametitle{Regression Model}
 \begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Complexity]
+\begin{center}
+\(\hat{\boldsymbol{\beta}} = (\textbf{X} \textsuperscript{T} \textbf{X} ) \textsuperscript{-1} \textbf{X} \textsuperscript{T} \textbf{Y}  \) \\
+\end{center}
 key computation step:
 \begin{itemize}
 \item \(\textbf{X}^T\textbf{X} \mbox{ in O(} n\times k^2 \mbox{)}\)
 \item \((\textbf{X}^T\textbf{X})^{-1} \mbox{ in O(} k^3 \mbox{)}\)
 \end{itemize}
 n = number of rows from train data\\
-k = number of regression parameters = 5\\
+k = number of regression parameters = 5 + 1\\
 As \(n>>k\), the overall complexity is O(\(n\)).
 \end{tcolorbox}
 \end{frame}
@@ -362,19 +365,19 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 \frametitle{Result}
 
 	\centering
-	Shingle Match Performance
+	Shingle Match \% Performance
 
 	\begin{center}
 		%\begin{tabular}{11}
-		\begin{tabular}{cc}
+		\begin{tabular}{ccc}
 			\toprule
-				Shingle Length & Match \% \\
+				Shingle Length & \texttt{Top\_100} & \texttt{Top\_300} \\
 			\midrule
-				1 & 99.87\% \\
-				2 & 67.88\% \\
-				3 & 16.47\% \\
-				4 & 2.19\% \\
-				5 & 0.30\% \\
+				1 & 99.87\% & 99.97\% \\
+				2 & 67.88\% & 81.60\% \\
+				3 & 16.47\% & 25.83\% \\
+				4 & 2.19\%  & 2.89\% \\
+				5 & 0.30\%  & 0.05\% \\
 			\bottomrule
 		\end{tabular}
 	\end{center}
@@ -389,7 +392,7 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 \frametitle{Result(Cont'd)}
 
 	\centering
-	Performance - MSE comparison
+	Performance - MSE comparison - \texttt{Top\_100}
 
 	\begin{center}
 
@@ -472,6 +475,43 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Result(Cont'd)}
+
+	\centering
+	Performance - MSE comparison
+
+	\begin{center}
+
+		\begin{tabular}{ccc}
+			\toprule
+				\multirow{2}{*}{Prediction Method} &
+				\multicolumn{2}{c}{Default Score = Train Mean}\\
+				\cline{2-3}
+				& \texttt{Top\_100} &  \texttt{Top\_300} \\
+				%Method & testing \\
+			\midrule
+				Train Data Mean & 1.717 & 1.717 \\
+				\hline
+				1-shingle & 1.596 & 1.592\\
+				2-shingle & 1.595 & 1.531\\
+				3-shingle & 1.667 & 1.626\\
+				4-shingle & 1.704 & 1.701\\
+				5-shingle & 1.710 & 1.709\\
+				\hline
+				Regression & 1.369 & 1.273\\
+
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	\vspace{5mm}
+
+\end{frame}
+
+
+
+
 \begin{frame}
 \frametitle{Demostration}
 
@@ -488,8 +528,9 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 	\begin{itemize}
 		\setbeamertemplate{itemize items}[square]
 		\item Use Train Data Mean as default score.
-		\item The higher the match \%, the more accurate prediction.
-		\item 1-shingle method is better than other k-shingle methods.
+		\item The higher the match \%, the more accurate prediction \\ 
+		(for k\(>\)=2)
+		\item 1-\(/\)2-shingle method is better than other k-shingle methods.
 		\item Regression method is the best method.
 	\end{itemize}
 \end{frame}
