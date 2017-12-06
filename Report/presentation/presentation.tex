@@ -371,13 +371,13 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 		%\begin{tabular}{11}
 		\begin{tabular}{ccc}
 			\toprule
-				Shingle Length & \texttt{Top\_100} & \texttt{Top\_300} \\
+				Shingle Length & \texttt{Top-100} & \texttt{Top-300} \\
 			\midrule
 				1 & 99.87\% & 99.97\% \\
 				2 & 67.88\% & 81.60\% \\
 				3 & 16.47\% & 25.83\% \\
 				4 & 2.19\%  & 2.89\% \\
-				5 & 0.30\%  & 0.05\% \\
+				5 & 0.30\%  & 0.50\% \\
 			\bottomrule
 		\end{tabular}
 	\end{center}
@@ -392,7 +392,7 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 \frametitle{Result(Cont'd)}
 
 	\centering
-	Performance - MSE comparison - \texttt{Top\_100}
+	Performance - MSE comparison - \texttt{Top-100}
 
 	\begin{center}
 
@@ -489,7 +489,7 @@ As \(n>>k\), the overall complexity is O(\(n\)).
 				\multirow{2}{*}{Prediction Method} &
 				\multicolumn{2}{c}{Default Score = Train Mean}\\
 				\cline{2-3}
-				& \texttt{Top\_100} &  \texttt{Top\_300} \\
+				& \texttt{Top-100} &  \texttt{Top-300} \\
 				%Method & testing \\
 			\midrule
 				Train Data Mean & 1.717 & 1.717 \\
