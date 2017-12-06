@@ -241,9 +241,11 @@ In matrix form :
 where \(\textbf{Y}\) is a \(n\times1\) matrix, \(\boldsymbol{\beta_0}\) is a \(n\times 1\) matrix, \(\boldsymbol{\beta}\) is a \(5\times 1\) matrix, \(\textbf{X}\) is a \(n\times 5\) matrix.
 
 
-The coefficients were estimated by the following formula:
+The coefficients were estimated by the following formula: \\
 
-[ beta = blah blah blah formula ]
+\begin{center}
+\(\hat{\boldsymbol{\beta}} = (\textbf{X} \textsuperscript{T} \textbf{X} ) \textsuperscript{-1} \textbf{X} \textsuperscript{T} \textbf{Y}  \) \\
+\end{center}
 
 The computational complexity were examined as: \(\textbf{X}^{T}\textbf{X}\) was in \(O(n \times k^2)\); \((\textbf{X}^{T}\textbf{X})^{-1}\) was in \(O(k^3)\);
 \(\textbf{X}^T\textbf{Y}\) was in \(O(n\times k)\); the final multiplication was in \(O(k^2)\).
@@ -262,18 +264,28 @@ where $x_i$ is the $i$-th shingle score, for $i=1,...,5$. For prediction, the 5 
 
 \begin{table}[H]
 \caption{Shingle Match Performance}
-		\begin{tabular}{cl}
+		\begin{tabular}{ccc}
 			\toprule
-				Shingle Length & Match \% \\
+				Shingle Length & \texttt{Top-100} & \texttt{Top-300} \\
 			\midrule
-				1 & 99.87\% \\
-				2 & 67.88\% \\
-				3 & 16.47\% \\
-				4 & 2.19\% \\
-				5 & 0.30\% \\
+				1 & 99.87\% & 99.97\% \\
+				2 & 67.88\% & 81.60\% \\
+				3 & 16.47\% & 25.83\% \\
+				4 & 2.19\%  & 2.89\% \\
+				5 & 0.30\%  & 0.50\% \\
 			\bottomrule
 		\end{tabular}
 \end{table}
+
+The shingle match performance was the percentage or rate of k-shingle being found among the test data set. 
+For each k-shingle, a text was determined as matched if at least one k-shingle from it was found in the refined database. 
+This reflected the performance of the refined database in terms of collecting repeated shingles. 
+Focusing on "top-100 database", almost all of the test data were found repeating 1-shingle. As the shingle length increased, the match percentage decreased remarkably to 0.3\% only. 
+Comparing "top-300" to "top-100", the former had a higher match percentage in 1- to 3-shingle; while they were alike when it came to 4- and 5-shingle.
+This showed that a larger shingle collection only benefited for 3-shingle or less. In addition, this result implied that for a short paragraph comment, it was very rare to have repeated 5-shingle. 
+
+\subsection{Measurement}
+Mean squared error (MSE) was used to measure the prediction performance. The benchmark was the mse when the mean score of training data acted as predictor. Any result less than it would be a better method.
 
 \subsection{Default Score Comparison}
 
@@ -284,7 +296,7 @@ where $x_i$ is the $i$-th shingle score, for $i=1,...,5$. For prediction, the 5 
 				\multirow{2}{*}{Prediction Method} &
 				\multicolumn{2}{c}{Default Score}\\
 				\cline{2-3}
-				& 3 & Train Mean = 4.18 \\
+				& Middle Score & Train Data Mean \\
 				%Method & testing \\
 			\midrule
 				Train Data Mean & 1.717 & 1.717 \\
@@ -302,23 +314,71 @@ where $x_i$ is the $i$-th shingle score, for $i=1,...,5$. For prediction, the 5 
 
 \end{table}
 
-\begin{figure*}
-\includegraphics{predictor_1_error_3}
-\caption{Predictor 1 with Default Score set to 3}
-\end{figure*}
-
-\begin{figure*}
-\includegraphics{predictor_1_error_train_mean}
-\caption{Predictor 1 with Default Score set to 4.18}
-\end{figure*}
-
-\subsection{Prediction Method Comparison}
+The above table listed out the performance of under two default scores of "top-100". The first one was the middle score. In this case, the range of score was from 1 to 5 and the middle was 3. The second default score was the mean score of the train data set.
+In the 1-shingle, the results were more or less the same. This was because the almost 100% test data were matched in the refined database. 
+Starting from 2-shingle, the differences became significant. When using the middle score, the MSE soared and the pace was according to the decrease of the match percentage. It was much higher than the benchmark and suggested that the middle score was not a suitable choice.
+On the other hand, for the train data mean, although there was a upgoing trend for MSE, there was a lower degree of increase.
+The higher shingle length resulted a less matching chance to the refined database and thus the prediction was more likely to be assigned as train data mean score. This explained the trend of the MSE, which was approaching to the benchmark.
+It was concluded that train data mean score should be chosen as the default score.
 
 
-\section{Testing}
-The system will be taking 70\% of the data set to be based set and the rest as testing and improving the prediction.
+%
+%\begin{figure*}
+%\includegraphics{predictor_1_error_3}
+%\caption{Predictor 1 with Default Score set to 3}
+%\end{figure*}
+%
+%\begin{figure*}
+%\includegraphics{predictor_1_error_train_mean}
+%\caption{Predictor 1 with Default Score set to 4.18}
+%\end{figure*}
 
-Testing result is as following:
+\subsection{Prediction Method and Refined Database Comparison}
+
+\begin{table}[H]
+\caption{Mean Squared Error Comparison using Train Data Mean as Default Score}
+	\begin{tabular}{ccc}
+			\toprule
+				\multirow{2}{*}{Prediction Method} &
+				\multicolumn{2}{c}{Refined Database}\\
+				\cline{2-3}
+				& \texttt{Top-100} &  \texttt{Top-300} \\
+				%Method & testing \\
+			\midrule
+				Train Data Mean & 1.717 & 1.717 \\
+				\hline
+				1-shingle & 1.596 & 1.592\\
+				2-shingle & 1.595 & 1.531\\
+				3-shingle & 1.667 & 1.626\\
+				4-shingle & 1.704 & 1.701\\
+				5-shingle & 1.710 & 1.709\\
+				\hline
+				Regression & 1.369 & 1.273\\
+
+			\bottomrule
+		\end{tabular}
+
+\end{table}
+
+Suppose the train data mean was the default score, the performance of k-shingle method varied. The 1- and 2-shingle outperformed over the 5 k-shingle method, in which the latter one was slightly better. The reduction in MSE was amplified when using "top-300". Although the match percentage of 2-shingle was much lower than 1-shingle, the prediction turnt out to be more accurate. This implied that the 2-shingle offered a more precise indication. In other words, a sentiment expressed more clearly by phrases than words.
+However, it applied to 2-shingle only and was another situation for 3- to 5-shingle. When the match percentage further went downards, the prediction capability tumbled accordingly. \\
+Regression Method provided the least MSE and was superior to k-shingle method. Even though in the worst situation, using the middle score as the default score, it still outperformed and surpassed the benchmark. On one side, this method considered more information, namely all k-shingles; on the other side, it smoothed out the k-shingle predictions and achieved a diminished MSE.\\
+Comparing "top-100" with "top-300", the larger database always produced lower MSE across all approaches. However, the improvement was noticetable in 2-shingle method and Regression Method. In 2-shingle, the reason was that the match percentage of it was about 13\% higher than the smaller set. In Regression Method, due to the better performance in all k-shingle method, an further enhanced the prediction.
+
 
 \section{Conclusion}
+
+In this project, a several approaches were discovered to predict the sentiment of a paragraph sized text. First, the 2-shingle was the most representative among the 5 shingles. Next, the train data mean should be chosen as the default score. Concerning prediction methods, Regression Method was the best performaner; whereas 2-shingle method came out on top of k-shingle method. Finally, a larger refined database provided a lower error.\\
+
+To further discuss the size of refined database, it depended on application. For example, if it applied to streaming data, a smaller refined database would be desirable when the run-time was taken into consideration. In addition, the above result showed that the "top-100" already exceeded the benchmark and there was a trade-off between accuracy and efficiency in facing huge workload. 
+The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.\\
+
+The prediction methodology could be applied to different aspects of text, such as movie reviews. There was no assumption on the score or sentiment for words at first, unlike using AFINN words rating [>>>>>refeerence<<<<]. Not only single word, but also phrases or k-shingles were took into consideration. This allowed us to capture the most related wordings or even jargons of the specific topic.
+
+
 \section{Future Work}
+
+\section{Reference}
+
+AFINN
+%http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010
