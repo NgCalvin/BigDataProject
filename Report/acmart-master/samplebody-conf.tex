@@ -257,9 +257,9 @@ The following is some of the result by the system using testing set:
 %	4&glass jar chow watmore ken talk pink ...&	3.0 &	3.0	&3.0	&3.0	&3.0	 &3.0\\
 %	4 &unable canned pumpkin grocery stores ...	& 4.21487 &	3.99462	& 4.43513	 & 3.0	& 3.0	&3.0\\
 %	5&family just loves having novasliced salmon ...&	4.18353	&4.18353	&3.0	&3.0	&3.0	&3.0\\
-
-%	\bottomrule
-%	\end{tabular}
+%
+%%	\bottomrule
+%\end{tabular}
 %\end{table*}
 
 \subsection{Shingle Percentage Performance}
@@ -321,21 +321,25 @@ The above table listed out the performance of under two default scores of "Top-1
 In the 1-shingle, the results were more or less the same. This was because the almost 100\% test data were matched in the refined database. 
 Starting from 2-shingle, the differences became significant. When using the middle score, the MSE soared and the pace was according to the decrease of the match percentage. It was much higher than the benchmark and suggested that the middle score was not a suitable choice.
 
-On the other hand, for the train data mean, although there was a upgoing trend for MSE, there was a lower degree of increase.
-The higher shingle length resulted a less matching chance to the refined database and thus the prediction was more likely to be assigned as train data mean score. This explained the trend of the MSE, which was approaching to the benchmark.
-It was concluded that train data mean score should be chosen as the default score.
+
+\begin{figure}
+\includegraphics[height=2in, width=2.5in]{predictor_5_error_3}
+\caption{Predictor 5 with Default Score set to Middle Score}
+\end{figure}
+
+\begin{figure}
+\includegraphics[height=2in, width=2.5in]{predictor_5_error_train_mean}
+\caption{Predictor 5 with Default Score set to Train Data Mean}
+\end{figure}
+
+On the other hand, for the train data mean, although there was a up-going trend for MSE, there was a lower degree of increase.
+The higher shingle length resulted a less matching chance to the refined database and thus the prediction was more likely to be assigned as train data mean score. This explained the trend of the MSE, which was approaching to the benchmark.\\
+The performance could also be compared by examining the spread of error. The above two charts showed the error distributions of 5-shingle prediction of two default scores as an example. From the difference in MSE, the 5-shingle would provide the most obvious divergence in spread.\\
+In the first chart, the majority of the error were at two extremes: "-2" and "+2; whilst in the second chart, the crowd was found around "-1". This presented that the Train Data Mean narrowed the error spread and effectively reduced extremes.
+The above results concluded that train data mean score should be chosen as the default score.
 
 
-%
-%\begin{figure*}
-%\includegraphics{predictor_1_error_3}
-%\caption{Predictor 1 with Default Score set to 3}
-%\end{figure*}
-%
-%\begin{figure*}
-%\includegraphics{predictor_1_error_train_mean}
-%\caption{Predictor 1 with Default Score set to 4.18}
-%\end{figure*}
+
 
 \subsection{Prediction Method and Refined Database Comparison}
 
@@ -367,14 +371,46 @@ It was concluded that train data mean score should be chosen as the default scor
 Suppose the train data mean was the default score, the performance of k-shingle method varied. The 1- and 2-shingle outperformed over the five k-shingle method, in which the latter one was slightly better. The reduction in MSE was amplified when using "top-300". Although the match percentage of 2-shingle was much lower than 1-shingle, the prediction turnt out to be more accurate. This implied that the 2-shingle offered a more precise indication. In other words, a sentiment expressed more clearly by phrases than words.
 However, it applied to 2-shingle only and was another situation for 3-shingle to 5-shingle. When the match percentage further went downards, the prediction capability tumbled accordingly. 
 
-Regression Method provided the least MSE and was superior to k-shingle method. Even though in the worst situation, using the middle score as the default score, it still outperformed and surpassed the benchmark. On one side, this method considered more information, namely all k-shingles; on the other side, it smoothed out the k-shingle predictions and achieved a diminished MSE.
+\begin{table}[H]
 
-Comparing "top-100" with "top-300", the larger database always produced lower MSE across all approaches. However, the improvement was noticetable in 2-shingle method and Regression Method. In 2-shingle, the reason was that the match percentage of it was about 13\% higher than the smaller set. In Regression Method, due to the better performance in all k-shingle method, an further enhanced the prediction.
+\caption{Regression Coefficient with Train Data Mean as Default Score}
+	\begin{tabular}{ccc}
+			\toprule
+				Refined Database & \texttt{Top-100} &  \texttt{Top-300} \\
+			\midrule
+				 $\beta_0$ & -8.636 & -13.446\\
+				 $\beta_1$ & 1.842 & 3.055\\
+				 $\beta_2$ & 0.441 & 0.423\\
+				 $\beta_3$ & 0.362 & 0.380\\
+				 $\beta_4$ & 0.227 & 0.204\\
+				 $\beta_5$ & 0.258 & 0.239\\
+				
+
+			\bottomrule
+		\end{tabular}
+
+\end{table}
+
+\begin{figure}
+\includegraphics[height=2in, width=2.5in]{reg_error_train_mean_top100}
+\caption{"Top-100" Regression Method Error Spread}
+\end{figure}
+
+\begin{figure}
+\includegraphics[height=2in, width=2.5in]{reg_error_train_mean_top300}
+\caption{"Top-300" Regression Method Error Spread}
+\end{figure}
+
+Regression Method provided the least MSE and was superior to k-shingle method. Even though in the worst situation, using the middle score as the default score, it still outperformed and surpassed the benchmark. On one side, this method considered more information, namely all k-shingles; on the other side, it smoothed out the k-shingle predictions and achieved a diminished MSE.\\
+
+Furthermore, in terms of error spread,  Regression Method resulted a bell shape of error distribution. The one from "top-100"  was skewed to the right; while the one of "top-300"  was a bell shape with center at 0.
+
+Comparing "top-100" with "top-300", the larger database always produced lower MSE across all approaches. However, the improvement was noticeable in 2-shingle method and Regression Method. In 2-shingle, the reason was that the match percentage of it was about 13\% higher than the smaller set. In Regression Method, due to the better performance in all k-shingle method, there was a further enhancement in prediction.
 
 
 \section{Conclusion}
 
-In this project, a several approaches were discovered to predict the sentiment of a paragraph sized text. First, the 2-shingle was the most representative among the 5 shingles. Next, the train data mean should be chosen as the default score. Concerning prediction methods, Regression Method was the best performaner; whereas 2-shingle method came out on top of k-shingle method. Finally, a larger refined database provided a lower error.
+In this project, a several approaches were discovered to predict the sentiment of a paragraph sized text. First, the 2-shingle was the most representative among the 5 shingles. Next, the train data mean should be chosen as the default score. Concerning prediction methods, Regression Method was the best performer; whereas 2-shingle method came out on top of k-shingle method. Finally, a larger refined database provided a lower error.
 
 To further discuss the size of refined database, it depended on application. For example, if it applied to streaming data, a smaller refined database would be desirable when the run-time was taken into consideration. In addition, the above result showed that the "top-100" already exceeded the benchmark and there was a trade-off between accuracy and efficiency in facing huge workload. 
 The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.
@@ -387,7 +423,7 @@ The prediction methodology could be applied to different aspects of text, such a
 \subsection{Filtering}
 Abuse comments or inconsistence comments to rating will affect the popularity of a product dramatically. For example, many short comments written to lesser the popularity on purpose or a review could be rated with score one but the comment is prasing the product. Since our system is able to predict score based on comments by user. We can use the predicted score to filter out abuse comments or ask the reviewer if they make any mistake for inconsistence comments. 
 
-Moreover, filtering can be further improved since the Amazon review now inculde a indicator showing if the user who left the review did purchase the product or not. If a comment did not get verified of purchasing the product, maybe this comment can be filter out and not include in training the regression model.
+Moreover, filtering can be further improved since the Amazon review now include a indicator showing if the user who left the review did purchase the product or not. If a comment did not get verified of purchasing the product, maybe this comment can be filter out and not include in training the regression model.
 
 \begin{thebibliography}{1}
 \bibitem{paper2}
