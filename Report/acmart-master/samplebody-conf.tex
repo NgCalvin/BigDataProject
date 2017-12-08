@@ -318,7 +318,7 @@ Table 6 is some of the result by the system using testing set:
 
 \subsection{Shingle Percentage Performance}
 
-\begin{table}
+\begin{table}[H]
 \caption{Shingle Match Performance}
 		\begin{tabular}{ccc}
 			\toprule
@@ -376,7 +376,7 @@ In the 1-shingle, the results were more or less the same. This was because the a
 Starting from 2-shingle, the differences became significant. When using the middle score, the MSE soared and the pace was according to the decrease of the match percentage. It was much higher than the benchmark and suggested that the middle score was not a suitable choice.
 
 
-\begin{figure}
+\begin{figure}[H]
 \includegraphics[height=2in, width=2.5in]{predictor_5_error_3}
 \caption{Predictor 5 with Default Score set to Middle Score}
 \end{figure}
@@ -468,7 +468,7 @@ Comparing "top-100" with "top-300", the larger database always produced lower MS
 In this project, a several approaches were discovered to predict the sentiment of a paragraph sized text. First, the 2-shingle was the most representative among the 5 shingles. Next, the train data mean should be chosen as the default score. Concerning prediction methods, Regression Method was the best performer; whereas 2-shingle method came out on top of k-shingle method. Finally, a larger refined database provided a lower error.
 
 To further discuss the size of refined database, it depended on application. For example, if it applied to streaming data, a smaller refined database would be desirable when the run-time was taken into consideration. In addition, the above result showed that the "top-100" already exceeded the benchmark and there was a trade-off between accuracy and efficiency in facing huge workload. 
-The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.\\
+The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.
 
 The prediction methodology could be applied to different aspects of text, such as movie reviews. There was no assumption on the score or sentiment for words at first, unlike using AFINN words rating[1], where it assumed sentiment score for words in advance. In our approach, not only single word, but also phrases or k-shingles were took into consideration. This allowed us to capture the most related wordings or even jargon of the specific topic.
 
