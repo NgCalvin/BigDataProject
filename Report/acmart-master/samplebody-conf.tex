@@ -509,15 +509,13 @@ Comparing "top-100" with "top-300", the larger database always produced lower MS
 
 In this project, a several approaches were discovered to predict the sentiment of a paragraph sized text. First, the 2-shingle was the most representative among the 5 shingles. Next, the train data mean should be chosen as the default score. Concerning prediction methods, Regression Method was the best performer; whereas 2-shingle method came out on top of k-shingle method. Finally, a larger refined database provided a lower error.
 
-To further discuss the size of refined database, it depended on application. For example, if it applied to streaming data, a smaller refined database would be desirable when the run-time was taken into consideration. In addition, the above result showed that the "top-100" already exceeded the benchmark and there was a trade-off between accuracy and efficiency in facing huge workload. 
-The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.
-
 The prediction methodology could be applied to different aspects of text, such as movie reviews. There was no assumption on the score or sentiment for words at first, unlike using AFINN words rating[1], where it assumed sentiment score for words in advance. In our approach, not only single word, but also phrases or k-shingles were took into consideration. This allowed us to capture the most related wordings or even jargon of the specific topic.
 
-The stopword list was introduced to  reduce the size of text and thus the amount of shingles, so as to facilitate the computation. Nevertheless, this resulted not every meaningful phrases were preserved from the stopword list, like, "on the other hand" became "hand", despite the fact that, "hand" was enough to represent it. If one desired to maintain these kind of phrases, they could be excepted during the stopword removal step, or even the step could be skipped. Given that the reviews were in paragraph long, not an article, it would be still acceptable to include all the stopwords. The reason was that the shingle database was constructed by MapRedure or by distributed processing, but the refined database might have to be further reviewed.
+The stopword list was introduced to reduce the size of text and thus the amount of shingles, so as to facilitate the computation. Nevertheless, this resulted not every meaningful phrases were preserved from the stopword list, like, "on the other hand" became "hand", despite the fact that, "hand" was enough to represent it. If one desired to maintain these kind of phrases, they could be excepted during the stopword removal step, or even the step could be skipped. Given that the reviews were in paragraph long, not an article, it would be still acceptable to include all the stopwords. The reason was that the shingle database was constructed by MapRedure or by distributed processing, but the refined database might have to be further reviewed.
 
+Further discussing the size of refined database, it depended on application. For instance, if it applied to streaming data, a smaller refined database would be desirable when the run-time was taken into consideration. In addition, the above result showed that the "top-100" already exceeded the benchmark and there was a trade-off between accuracy and efficiency in facing huge workload. The approach of refined database could also be fine-tuned. For example, it was unnecessary to have same amount of collection in each k-shingle and there could be more 2-shingles.
 
-
+Linear Regression was introduced to aggregate multi-shingle information. Other regression methods could also be applied, for example, Multiple Linear Regression with higher order variables and Logistic Regression [3].  Taking all 5-shingle prediction scores into account was one of the methods. Other methods such as SVM [4] could also be explored as long as the computation complexity was efficient.
 
 
 \section{Future Idea}
@@ -527,7 +525,7 @@ Abuse comments and inconsistent comments to rating will affect the popularity of
 
 Moreover, filtering can be further improved since the Amazon review now include a indicator showing if the user who left the review did purchase the product or not. If a comment did not get verified of purchasing the product, maybe this comment can be filter out and not include in training the regression model.
 
-\subsection{Streaming model}
+\subsection{Streaming Model}
 As velocity is one of the important principle of Big Data, this system can be further enhanced to incorporates new comments every minutes. The idea behind is that when a new comment is inserted by a user for a particular product, the system will predict the score based on the comment and see if the predicted result is close to the real rating by the user or not. If not, using regression again to update the coefficient of the equation. This part is also related to the previous filtering part, as we want to filter out abuse comments and inconsistent comments so that when other users read the rating and comment, these comments can truly represent the product.
 
 \begin{thebibliography}{1}
@@ -541,4 +539,20 @@ As velocity is one of the important principle of Big Data, this system can be fu
 	{\em List of English Stop Words},
 	\url{http://xpo6.com/list-of-english-stop-words/},
 	14 Apr 2009.
+
+%[3] 
+%Regression reference book
+%https://www.amazon.com/Applied-Linear-Regression-Models-Student/dp/0073014664
+%
+%[4]
+%https://dl.acm.org/citation.cfm?id=1246423
+%
+%[5]
+%Amazon Fine Food Reviews
+%https://www.kaggle.com/snap/amazon-fine-food-reviews
+%
+
+
+
+
 \end{thebibliography}
