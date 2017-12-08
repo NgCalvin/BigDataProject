@@ -89,12 +89,24 @@ A straight forward idea would be taking an average from the five k-shingle predi
 
 Therefore, the Regression Method was introduced as an objective approach to investigate the linkage among the five k-shingle predicted scores. In this project, this method was executed by using linear regression.
 
+Figure 1 is the flowchart of the system, white parallegram is data file while blue square is the program we code.
+
+\begin{figure}
+\includegraphics[height=4.5in, width=2.8in]{flowchart}
+\caption{Flowchart of the system}
+\end{figure}
+
 \subsection{Stage 1 - Data Preprocessing}
 In this subsection, we will be explaining the idea behind stage one, pre-processing. As only small portion of the given data are useful in this project, we need to do pre-processing before doing other applications.
 
 We will be looking at the algorithm for data preprocessing: 
+
 \begin{algorithm}
 \caption{Preprocessing}
+\DontPrintSemicolon
+\KwData{Reviews.csv}
+\KwResult{Preprocessed.csv}
+
  \While{There exists next row inside Reviews.csv}
  {
  	Extract \textbf{Rating} and \textbf{Text}\;
@@ -106,7 +118,7 @@ We will be looking at the algorithm for data preprocessing:
 
 The original data file is in format of \(.csv\), each column is separated by a comma and each row is separated by a linebreak. Each row have the format : \{Id , ProductId, UserId, ProfileName, HelpfullnessNumerator, HelpfullnessDenominator, Score, Time, Summary, Text\}. As mentioned before, the only important parts are Score and Text. Thus, the resulting data have format : \{Score, Text\}. 
 
-During the pre-process, we will extract rating column, summary column and comment column of each review record. Moreover, we will remove all punctuations and selected stopwords from comment part and left with only meaningful words. The stopwords list from [>>>add reference<<< ] was taken as reference, but some stopwords were preserved because it affected the real meaning of the comment. For example, "Good" and "Not Good". If we remove stopword "Not", the meaning of the comment is completely reversed. Therefore, "contrast" stopwords were remained, such as, "but", "however, "not" and "yet". "Emphasis" stopwords were also kept, for example, "indeed", "very", "must", "never", "only". The following illustrated how a sentence was transformed:\\
+During the pre-process, we will extract rating column, summary column and comment column of each review record. Moreover, we will remove all punctuations and selected stopwords from comment part and left with only meaningful words. The stopwords list from [2] was taken as reference, but some stopwords were preserved because it affected the real meaning of the comment. For example, "Good" and "Not Good". If we remove stopword "Not", the meaning of the comment is completely reversed. Therefore, "contrast" stopwords were remained, such as, "but", "however, "not" and "yet". "Emphasis" stopwords were also kept, for example, "indeed", "very", "must", "never", "only". The following illustrated how a sentence was transformed:\\
 
 \begin{tabular}{l|l}
   %\toprule
@@ -139,6 +151,9 @@ In general, a frequency threshold could be set for this step.
 
 Here is the algorithm for mapper and reducer:
 \begin{algorithm}
+\DontPrintSemicolon
+\KwData{Preprocessed.csv}
+\KwResult{Tuple}
 \caption{Mapper}
 	\While{There exists next row inside Preprocessed.csv}
 	{
@@ -153,7 +168,12 @@ Here is the algorithm for mapper and reducer:
  		}
 	}
 \end{algorithm}
+
 \begin{algorithm}
+\DontPrintSemicolon
+\KwData{Tuple from Mapper}
+\KwResult{Tuple}
+
 \caption{Reducer}
 	\ForAll{tuples with key \(<\mbox{rating, k, shingle}> \)} {
 		frequency = sum of all tuple values\;
@@ -196,6 +216,7 @@ The following was a demonstration of how shingles were extracted from a preproce
 
 Here was part of the result of the Map-Reduce procedure:
 \begin{table}[H]
+\caption{Result of MapReduce Procedure}
 \begin{tabular}{llll}
   \toprule
 	Score& k& frequency& shingle\\
@@ -215,6 +236,26 @@ Here was part of the result of the Map-Reduce procedure:
 After the mass database was yielded from the training set, it was then be refined to a smaller set for prediction use. The refined database should be restrained to be sufficiently small in order to facilitate the speed of reading it. In this project, top \(n\) frequency for each shingle-score combination was chosen to build the prediction shingle set. Top frequency was considered as the higher the shingle frequency, the more representable of score of it. For example, a "top-100 database" would be 2500 rows long, as it extracted top 100 record from each 5 shingles and 5 different scores. Furthermore, "top-100 database" and "top-300 database" were used in this project.Other refinement method could also be considered, such as, top 10\% of each shingle-score combinations.
 
 \subsection{Stage 3 - Prediction}
+We use algorithm 4 to get the score for each length-k shingles:
+\begin{algorithm}
+	\caption{Prediction using length-k shingles}
+	\DontPrintSemicolon
+	Load the \(records\) from \textbf{Shingle Database}\;
+	Find all \textit{k-shingles} in the input text\;
+	\ForEach{shingle}
+	{
+		Collect all records of \textit{shingle} from database\;
+		Append to \(RecordsFound\)\;
+	}
+	\eIf {\(RecordsFound\) is not empty}
+	{
+		\(score\) = weighted average of \(RecordsFound\)\;
+	}
+	{
+		\(score\) = average of all records in database\;
+	}
+	return \(score\)\;
+\end{algorithm}
 
 \subsubsection{k-Shingle Prediction Score}
 First, a review would be preprocessed with the same procedure on training data set, namely, remove stop-words. Next, 1-shingles to 5-shingles of it were constructed and then were searched through the refined database for matchup.
@@ -370,7 +411,7 @@ Mean squared error (MSE) was used to measure the prediction performance. The ben
 
 \end{table}
 
-The above table listed out the performance of under two default scores of "Top-100". The first one was the middle score. In this case, the range of score was from 1 to 5 and the middle was 3. The second default score was the mean score of the train data set.
+Table 8 listed out the performance of under two default scores of "Top-100". The first one was the middle score. In this case, the range of score was from 1 to 5 and the middle was 3. The second default score was the mean score of the train data set.
 
 In the 1-shingle, the results were more or less the same. This was because the almost 100\% test data were matched in the refined database. 
 Starting from 2-shingle, the differences became significant. When using the middle score, the MSE soared and the pace was according to the decrease of the match percentage. It was much higher than the benchmark and suggested that the middle score was not a suitable choice.
@@ -381,13 +422,14 @@ Starting from 2-shingle, the differences became significant. When using the midd
 \caption{Predictor 5 with Default Score set to Middle Score}
 \end{figure}
 
+On the other hand, for the train data mean, although there was a up-going trend for MSE, there was a lower degree of increase.
+The higher shingle length resulted a less matching chance to the refined database and thus the prediction was more likely to be assigned as train data mean score. This explained the trend of the MSE, which was approaching to the benchmark.
+
 \begin{figure}
 \includegraphics[height=2in, width=2.5in]{predictor_5_error_train_mean}
 \caption{Predictor 5 with Default Score set to Train Data Mean}
 \end{figure}
 
-On the other hand, for the train data mean, although there was a up-going trend for MSE, there was a lower degree of increase.
-The higher shingle length resulted a less matching chance to the refined database and thus the prediction was more likely to be assigned as train data mean score. This explained the trend of the MSE, which was approaching to the benchmark.\\
 The performance could also be compared by examining the spread of error. The above two charts showed the error distributions of 5-shingle prediction of two default scores as an example. From the difference in MSE, the 5-shingle would provide the most obvious divergence in spread.\\
 In the first chart, the majority of the error were at two extremes: "-2" and "+2; whilst in the second chart, the crowd was found around "-1". This presented that the Train Data Mean narrowed the error spread and effectively reduced extremes.
 The above results concluded that train data mean score should be chosen as the default score.
@@ -495,4 +537,8 @@ As velocity is one of the important principle of Big Data, this system can be fu
 	Informatics and Mathematical Modelling, Technical University of Denmark,
 	\url{http://www2.imm.dtu.dk/pubdb/p.php?6010},
 	Mar 2011.
+\bibitem{url}
+	{\em List of English Stop Words},
+	\url{http://xpo6.com/list-of-english-stop-words/},
+	14 Apr 2009.
 \end{thebibliography}
